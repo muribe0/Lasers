@@ -23,6 +23,7 @@ public class BloqueEspejo extends Bloque{
         return true;
     }
 
+    
     public String toString() {
         return "bloque espejo";
     }
