@@ -6,6 +6,11 @@ public class BloqueOpaco extends Bloque {
     public boolean esOpaco() {
         return true;
     }
+    @Override
+    public void interactuarConLaser(Laser laser) {
+        // Detiene el láser
+       // laser.detener();
+    }
 
     public String toString() {
         return "bloque opaco";

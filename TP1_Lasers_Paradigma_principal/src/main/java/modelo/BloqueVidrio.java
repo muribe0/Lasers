@@ -4,16 +4,6 @@ public class BloqueVidrio extends Bloque{
     private Coordenada coordenada;
 
     @Override
-    public boolean esOpaco() {
-        return false;
-    }
-
-    @Override
-    public boolean esVacio() {
-        return false;
-    }
-
-    @Override
     public boolean esEspejo() {
         return true;
     }
@@ -23,9 +13,10 @@ public class BloqueVidrio extends Bloque{
         return true;
     }
 
-    @Override
-    public boolean esMovible() {
-        return false;
+    public void interactuarConLaser(Laser laser) {
+        // El láser atraviesa el bloque sin detenerse
+        //laser.continuar();
+        //laser.reflejar();
     }
 
     public String toString() {

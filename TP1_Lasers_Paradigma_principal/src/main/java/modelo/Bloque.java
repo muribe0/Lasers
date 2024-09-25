@@ -24,13 +24,9 @@ public class Bloque {
         return false;
     }
 
+    public  void interactuarConLaser(Laser laser){
+
+    };
 }
 
-// Subclase Bloque Opaco Fijo
-//public class BloqueOpacoFijo extends Bloque {
-    //@Override
-    //public void interactuarConLaser(Laser laser) {
-        // El rayo se detiene aquí
-  //  }
-//}
 
