@@ -1,9 +1,17 @@
+package modelo;
+
 import java.util.List;
 
 public class Nivel {
     private Grilla grilla;
     private List<Emisor> emisores;
     private List<Objetivo> objetivos;
+
+    public Nivel(Grilla grilla, List<Emisor> emisores, List<Objetivo> objetivos) {
+        this.grilla = grilla;
+        this.emisores = emisores;
+        this.objetivos = objetivos;
+    }
 
     public void cargarDesdeArchivo(String archivoNivel) {
         // Lógica para cargar la configuración del nivel desde un archivo

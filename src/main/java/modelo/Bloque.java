@@ -1,7 +1,16 @@
-public abstract class Bloque {
-    public abstract void interactuarConLaser(Laser laser);
+package modelo;
+
+public class Bloque {
 
     public boolean esMovible() {
+        return false;
+    }
+
+    public boolean esVacio() {
+        return false;
+    }
+
+    public boolean esOpaco() {
         return false;
     }
 }
