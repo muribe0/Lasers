@@ -6,4 +6,9 @@ public class BloqueOpaco extends Bloque {
     public boolean esOpaco() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "#";
+    }
 }

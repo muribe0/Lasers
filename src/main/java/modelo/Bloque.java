@@ -13,6 +13,19 @@ public class Bloque {
     public boolean esOpaco() {
         return false;
     }
+
+    public boolean esEspejo() {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return " ";
+    }
+
+    public Coordenada reflejar(Coordenada ubicacion, Coordenada direccion) {
+        return null;
+    }
 }
 
 // Subclase Bloque Opaco Fijo
