@@ -24,9 +24,7 @@ public class Bloque {
         return false;
     }
 
-    public  void interactuarConLaser(Laser laser){
-
-    };
+    public abstract void interactuarConLaser(Laser laser);
 }
 
 
