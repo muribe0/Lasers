@@ -80,3 +80,6 @@ haciendo clicks
 
 mover()
 Puede mover solo si hace el click bien, sino no hace nada.
+
+![img_3.png](img_3.png)
+![img_4.png](img_4.png)

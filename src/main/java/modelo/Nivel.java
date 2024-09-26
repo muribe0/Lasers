@@ -22,6 +22,21 @@ public class Nivel {
        // grilla.moverBloque(x, y, nuevoX, nuevoY);
     }
 
+    /*
+    TESTING
+     */
+    public Grilla getGrilla() {
+        return grilla;
+    }
+
+    public List<Emisor> getEmisores() {
+        return emisores;
+    }
+
+    public List<Objetivo> getObjetivos() {
+        return objetivos;
+    }
+
     //public boolean validarSolucion() {
         // Validar si los objetivos fueron alcanzados
       //  for (Objetivo objetivo : objetivos) {
