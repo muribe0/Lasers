@@ -1,22 +1,45 @@
 package modelo;
-
 import java.util.List;
+import java.util.ArrayList;
 
 public class Juego {
     private List<Nivel> niveles;
     private Nivel nivelActual;
 
+    public Juego() {
+        niveles = new ArrayList<>();
+    }
+
     public void iniciarJuego() {
-        // Lógica para cargar y mostrar los niveles disponibles
+        // Cargar los 6 niveles
+        for (int i = 1; i <= 6; i++) {
+            cargarNivelDesdeArchivo("resources/nivel" + i + ".txt");
+        }
+
+        // Iniciar el primer nivel
+        if (!niveles.isEmpty()) {
+            nivelActual = niveles.get(0);
+        }
+    }
+
+    private void cargarNivelDesdeArchivo(String archivoNivel) {
+        Grilla grilla = new Grilla(10, 10); // Crear una grilla vacía
+        List<Emisor> emisores = new ArrayList<>();
+        List<Objetivo> objetivos = new ArrayList<>();
+
+        Nivel nivel = new Nivel(grilla, emisores, objetivos);
+        nivel.cargarDesdeArchivo(archivoNivel);
+
+        niveles.add(nivel);
     }
 
     public void cargarNivel(int numeroNivel) {
-        // Cargar un nivel específico
-        nivelActual = niveles.get(numeroNivel);
+        if (numeroNivel >= 0 && numeroNivel < niveles.size()) {
+            nivelActual = niveles.get(numeroNivel);
+        }
     }
 
     public void moverBloque(int x, int y, int nuevoX, int nuevoY) {
-        // Lógica para mover un bloque de una posición a otra
         nivelActual.moverBloque(x, y, nuevoX, nuevoY);
     }
 
