@@ -25,6 +25,10 @@ public class Bloque {
     }
 
     public abstract void interactuarConLaser(Laser laser);
+
+public Coordenada reflejar(Coordenada ubicacion, Coordenada direccion) {
+    return null;
+}
 }
 
 

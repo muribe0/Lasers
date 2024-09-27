@@ -14,13 +14,14 @@ public class Coordenada {
         this.y = coordenada.getY();
     }
 
-    public void mover(Coordenada direccion) {
+    public void sumar(Coordenada direccion) {
         this.x += direccion.getX();
         this.y += direccion.getY();
     }
 
-    public Coordenada getMitad() {
-        return new Coordenada(this.x / 2, this.y / 2);
+    public void restar(Coordenada direccion) {
+        this.x -= direccion.getX();
+        this.y -= direccion.getY();
     }
 
     public int getX() {

@@ -21,8 +21,6 @@ public class Juego {
     }
 
     public boolean verificarObjetivo() {
-        //logica cuando laser toque el objetivo final true
         return true;
-        //logica cuando laser no toque el objetivo final que siga avanzando el laser
     }
 }
