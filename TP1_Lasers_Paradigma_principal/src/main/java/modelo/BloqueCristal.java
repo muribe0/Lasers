@@ -10,12 +10,13 @@ public class BloqueCristal extends Bloque{
 
     @Override
     public void interactuarConLaser(Laser laser) {
-        // Refleja el láser saliendo por el extremo opuesto del bloque, con la misma dirección de origen.
-        //laser.refractar()
+        // Refleja el láser saliendo por el extremo opuesto del bloque
+        Coordenada nuevaDireccion = new Coordenada(laser.getDireccion());
+        laser.setDireccion(nuevaDireccion);
     }
 
+    @Override
     public String toString() {
-        return "bloque cristal";
+        return "C";
     }
-
 }

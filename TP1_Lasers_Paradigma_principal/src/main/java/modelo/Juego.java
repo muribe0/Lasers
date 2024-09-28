@@ -44,6 +44,12 @@ public class Juego {
     }
 
     public boolean verificarObjetivo() {
+        for (Objetivo objetivo : nivelActual.getObjetivos()) {
+            if (!objetivo.esAlcanzado()) {
+                return false;
+            }
+        }
         return true;
     }
+
 }

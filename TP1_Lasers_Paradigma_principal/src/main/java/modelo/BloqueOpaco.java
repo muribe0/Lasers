@@ -15,7 +15,9 @@ public class BloqueOpaco extends Bloque {
 
     @Override
     public String toString() {
-        return "#";
+        return "F";
     }
+    //QUE HACEMOS CON OPACO MOVIL??
 }
+
 

@@ -20,6 +20,7 @@ public class BloqueVidrio extends Bloque{
     }
 
     public String toString() {
-        return "bloque vidrio";
+        return "G";
     }
 }
+
