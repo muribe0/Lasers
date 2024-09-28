@@ -25,6 +25,15 @@ public class Laser {
         return false;
     }
 
+    public void detener() {
+        // Lógica para detener el láser (por ejemplo, no avanzar más)
+        getDireccion() = new Coordenada(0, 0); // Podríamos considerar esta dirección como "detenida"
+    }
+
+    public void setDireccion(Coordenada nuevaDireccion) {
+        getDireccion() = nuevaDireccion;
+    }
+
     /**
      * Obtiene el siguiente bloque con el que interactua el laser.
      * @return el bloque con el que interactua el laser.

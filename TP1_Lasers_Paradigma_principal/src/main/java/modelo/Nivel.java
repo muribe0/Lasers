@@ -18,15 +18,12 @@ public class Nivel {
             String linea;
             int fila = 0;
             boolean leyendoBloques = true;
-
             while ((linea = br.readLine()) != null) {
                 linea = linea.trim();
-
                 if (linea.isEmpty()) {
                     leyendoBloques = false; // Pasamos a la segunda sección
                     continue;
                 }
-
                 if (leyendoBloques) {
                     // Procesar la primera sección (configuración de bloques)
                     procesarLineaDeBloques(linea, fila);
@@ -82,6 +79,15 @@ public class Nivel {
         // grilla.moverBloque(x, y, nuevoX, nuevoY);
     }
 
+    public boolean validarSolucion() {
+        for (Objetivo objetivo : objetivos) {
+            if (!objetivo.esAlcanzado()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /*
     TESTING
      */
@@ -97,13 +103,4 @@ public class Nivel {
         return objetivos;
     }
 
-    //public boolean validarSolucion() {
-    // Validar si los objetivos fueron alcanzados
-    //  for (Objetivo objetivo : objetivos) {
-    //    if (!objetivo.esAlcanzado()) {
-    //      return false;
-    //  }
-    //}
-    //  return true;
-    //}
 }
