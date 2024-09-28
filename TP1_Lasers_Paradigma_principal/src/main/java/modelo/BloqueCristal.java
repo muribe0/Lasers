@@ -1,7 +1,6 @@
 package modelo;
 
 public class BloqueCristal extends Bloque{
-    private Coordenada coordenada;
 
     @Override
     public boolean esCristal() {
