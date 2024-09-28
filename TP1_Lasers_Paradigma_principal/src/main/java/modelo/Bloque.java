@@ -1,6 +1,6 @@
 package modelo;
 
-public class Bloque {
+public abstract class Bloque {
 
     public boolean esMovible() {
         return false;
@@ -14,7 +14,9 @@ public class Bloque {
         return false;
     }
 
-    public boolean esEspejo(){return false;}
+    public boolean esEspejo() {
+        return false;
+    }
 
     public boolean esVidrio() {
         return false;
@@ -24,11 +26,11 @@ public class Bloque {
         return false;
     }
 
+    // Método abstracto que cada subclase debe implementar.
     public abstract void interactuarConLaser(Laser laser);
 
-public Coordenada reflejar(Coordenada ubicacion, Coordenada direccion) {
-    return null;
+    @Override
+    public String toString() {
+        return " ";
+    }
 }
-}
-
-
