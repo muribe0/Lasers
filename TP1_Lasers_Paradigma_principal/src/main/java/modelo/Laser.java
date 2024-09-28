@@ -11,6 +11,7 @@ public class Laser {
         this.destino = new Coordenada(origen);
     }
 
+    
     /**
      * Avanza el laser en la direccion que tiene asignada.
      * @return falso cuando el laser llega al borde de la grilla o a un bloque opaco.
