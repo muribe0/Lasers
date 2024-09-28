@@ -13,7 +13,7 @@ public class Juego {
     public void iniciarJuego() {
         // Cargar los 6 niveles
         for (int i = 1; i <= 6; i++) {
-            cargarNivelDesdeArchivo("resources/nivel" + i + ".txt");
+            cargarNivelDesdeArchivo("resources/nivel" + i + ".dat");
         }
 
         // Iniciar el primer nivel
