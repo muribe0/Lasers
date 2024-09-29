@@ -6,26 +6,9 @@ import java.util.List;
 public class Emisor {
     private List<Laser> lasers;
 
-    public Emisor(int x, int y, String direccion) {
-        Coordenada origen = new Coordenada(x, y);
-        Coordenada dir = convertirDireccion(direccion);
+    public Emisor(Coordenada origen, Direccion direccion) {
         this.lasers = new ArrayList<>();
-        this.lasers.add(new Laser(origen, dir));
-    }
-
-    private Coordenada convertirDireccion(String direccion) {
-        switch (direccion) {
-            case "NE":
-                return new Coordenada(1, -1);
-            case "NW":
-                return new Coordenada(-1, -1);
-            case "SE":
-                return new Coordenada(1, 1);
-            case "SW":
-                return new Coordenada(-1, 1);
-            default:
-                throw new IllegalArgumentException("Dirección inválida");
-        }
+        this.lasers.add(new Laser(origen, direccion));
     }
 
     /**
@@ -50,7 +33,7 @@ public class Emisor {
         this.resetear();
 
         // mientras el ultimo laser no llegue al borde de la grilla o a un bloque opaco
-        Laser ultimo = this.lasers.get(this.lasers.size() - 1);
+        Laser ultimo = getPunta();
 
         while (ultimo != null) {
             if (!ultimo.avanzar(grilla)) {
@@ -58,13 +41,22 @@ public class Emisor {
                 if (siguienteBloque.esOpaco() || siguienteBloque.esVacio() || !grilla.estaDentro(ultimo.getDestino())) {
                     return;
                 } else if (siguienteBloque.esEspejo()) {
-                    Coordenada nuevaDireccion = siguienteBloque.reflejar(ultimo.getDestino(), ultimo.getDireccion());
-                    var nuevoLaser = new Laser(ultimo.getDestino(), nuevaDireccion);
-                    this.lasers.add(nuevoLaser);
-                    ultimo = nuevoLaser;
+                    siguienteBloque.interactuarConLaser(this);
+                    ultimo = getPunta();
                 }
             }
         }
+    }
+
+    public Laser getPunta() {
+        return this.lasers.get(this.lasers.size() - 1);
+    }
+
+    public void agregarLaser(Direccion direccion) {
+        Laser ultimo = getPunta();
+        Coordenada destino = ultimo.getDestino();
+        Laser nuevo = new Laser(destino, direccion);
+        this.lasers.add(nuevo);
     }
 
     /**
