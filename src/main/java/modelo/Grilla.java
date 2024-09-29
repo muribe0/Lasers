@@ -42,9 +42,12 @@ public class Grilla {
      * Agrega un bloque a la grilla en la posicion indicada
      * @param bloque: bloque a agregar a la grilla
      * @param coordenada: coordenada donde se agrega el bloque. Esta en formato real, no en formato grilla.
+     * @param convertir: si es true, convierte las coordenadas reales a la posicion de la matriz grilla, sino no lo hace y las usa como fila/columna de la celda.
      */
-    public void colocarBloque(Bloque bloque, Coordenada coordenada) {
-        coordenada = convertirCoordenadas(coordenada);
+    public void colocarBloque(Bloque bloque, Coordenada coordenada, boolean convertir) {
+        if (convertir) {
+            coordenada = convertirCoordenadas(coordenada);
+        }
         this.grilla[coordenada.getY()][coordenada.getX()] = bloque;
     }
 
