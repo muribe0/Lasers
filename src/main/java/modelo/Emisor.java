@@ -6,6 +6,12 @@ import java.util.List;
 public class Emisor {
     private List<Laser> lasers;
 
+    /**
+     * Crea un emisor con una ArrayList de un solo laser cuyo origen y direccion son los parametros dados.
+     *
+     * @param origen:    Coordenada de inicio del laser.
+     * @param direccion: Direccion en la que se movera el laser.
+     */
     public Emisor(Coordenada origen, Direccion direccion) {
         this.lasers = new ArrayList<>();
         this.lasers.add(new Laser(origen, direccion));
@@ -52,6 +58,11 @@ public class Emisor {
         return this.lasers.get(this.lasers.size() - 1);
     }
 
+    /**
+     * Agrega un laser a la lista de lasers, efectivamente en la punta del ultimo laser. Utiliza la posicion de la punta del anterior laser como origen
+     *
+     * @param direccion: define la direccion del laser a agregar.
+     */
     public void agregarLaser(Direccion direccion) {
         Laser ultimo = getPunta();
         Coordenada destino = ultimo.getDestino();
@@ -63,6 +74,7 @@ public class Emisor {
      * Genera una string del tipo (x1, y1) -> (x2, y2)(x2,y2) -> (x3, y3) donde x1,y1 son las coordenadas de inicio
      * del primer laser, (x2,y2) son las coordenadas de fin del primer laser e inicio del 2do, (x3,y3) son las
      * coordenadas del fin del segundo laser...
+     *
      * @return String con la representacion de los lasers.
      */
     public String toString() {
