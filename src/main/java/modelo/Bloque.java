@@ -27,7 +27,7 @@ public abstract class Bloque {
     }
 
     // Método abstracto que cada subclase debe implementar.
-    public void interactuarConLaser(Laser laser) {
+    public void interactuarConLaser(Emisor emisor) {
 
     }
 
