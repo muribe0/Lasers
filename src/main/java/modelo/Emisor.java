@@ -6,9 +6,26 @@ import java.util.List;
 public class Emisor {
     private List<Laser> lasers;
 
-    public Emisor(Laser laser) {
+    public Emisor(int x, int y, String direccion) {
+        Coordenada origen = new Coordenada(x, y);
+        Coordenada dir = convertirDireccion(direccion);
         this.lasers = new ArrayList<>();
-        this.lasers.add(laser);
+        this.lasers.add(new Laser(origen, dir));
+    }
+
+    private Coordenada convertirDireccion(String direccion) {
+        switch (direccion) {
+            case "NE":
+                return new Coordenada(1, -1);
+            case "NW":
+                return new Coordenada(-1, -1);
+            case "SE":
+                return new Coordenada(1, 1);
+            case "SW":
+                return new Coordenada(-1, 1);
+            default:
+                throw new IllegalArgumentException("Dirección inválida");
+        }
     }
 
     /**
