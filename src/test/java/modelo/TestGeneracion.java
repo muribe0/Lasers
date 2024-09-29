@@ -19,7 +19,7 @@ public class TestGeneracion {
                     default -> new Bloque();
                 };
                 var cord = new Coordenada(i * dimension, j * dimension);
-                grilla.agregarBloque(bloque, cord);
+                grilla.colocarBloque(bloque, cord);
             }
         }
     }
@@ -29,7 +29,7 @@ public class TestGeneracion {
         Integer alto = grilla.getAlto();
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
-                grilla.agregarBloque(new BloqueVacio(),
+                grilla.colocarBloque(new BloqueVacio(),
                         new Coordenada(i * grilla.getDimensionBloque(),
                                 j * grilla.getDimensionBloque()));
             }
