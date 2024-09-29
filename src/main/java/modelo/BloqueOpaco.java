@@ -7,7 +7,6 @@ public class BloqueOpaco extends Bloque {
         return true;
     }
 
-    @Override
     public void interactuarConLaser(Laser laser) {
         // Detiene el láser
         // laser.detener();
@@ -17,7 +16,6 @@ public class BloqueOpaco extends Bloque {
     public String toString() {
         return "F";
     }
-    //QUE HACEMOS CON OPACO MOVIL??
 }
 
 
