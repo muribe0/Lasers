@@ -17,7 +17,7 @@ public class Grilla {
     }
 
     /**
-     * Genera una grilla con Bloques genericos
+     * Genera una grilla con Bloques vacios
      * @param ancho: ancho de la grilla (CANTIDAD de bloques a lo ancho)
      * @param alto: alto de la grilla (CANTIDAD de bloques a lo alto)
      */
@@ -25,7 +25,7 @@ public class Grilla {
         this.grilla = new Bloque[alto][ancho];
         for (int i = 0; i < alto; i++) {
             for (int j = 0; j < ancho; j++) {
-                this.grilla[i][j] = new Bloque();
+                this.grilla[i][j] = new BloqueVacio();
             }
         }
     }
@@ -42,9 +42,12 @@ public class Grilla {
      * Agrega un bloque a la grilla en la posicion indicada
      * @param bloque: bloque a agregar a la grilla
      * @param coordenada: coordenada donde se agrega el bloque. Esta en formato real, no en formato grilla.
+     * @param convertir: si es true, convierte las coordenadas reales a la posicion de la matriz grilla, sino no lo hace y las usa como fila/columna de la celda.
      */
-    public void agregarBloque(Bloque bloque, Coordenada coordenada) {
-        coordenada = convertirCoordenadas(coordenada);
+    public void colocarBloque(Bloque bloque, Coordenada coordenada, boolean convertir) {
+        if (convertir) {
+            coordenada = convertirCoordenadas(coordenada);
+        }
         this.grilla[coordenada.getY()][coordenada.getX()] = bloque;
     }
 

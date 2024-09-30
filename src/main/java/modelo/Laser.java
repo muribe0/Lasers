@@ -2,10 +2,10 @@ package modelo;
 
 public class Laser {
     private Coordenada origen;
-    private Coordenada direccion;
+    private Direccion direccion;
     private Coordenada destino;
 
-    public Laser(Coordenada origen, Coordenada direccion) {
+    public Laser(Coordenada origen, Direccion direccion) {
         this.origen = origen;
         this.direccion = direccion;
         this.destino = new Coordenada(origen);
@@ -49,7 +49,7 @@ public class Laser {
     /**
      * @return la direccion del Laser.
      */
-    public Coordenada getDireccion() {
+    public Direccion getDireccion() {
         return this.direccion;
     }
 }

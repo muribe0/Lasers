@@ -8,8 +8,13 @@ public class BloqueEspejo extends Bloque {
     }
 
     @Override
-    public String toString() {
-        return "R";
+    public void interactuarConLaser(Emisor emisor) {
+        Laser laser = emisor.getPunta();
+        Direccion direccionActual = laser.getDireccion();
+        Coordenada ubicacionActual = laser.getDestino();
+        // Reflejar el láser según su dirección y la ubicación en el bloque
+        Direccion nuevaDireccion = reflejar(ubicacionActual, direccionActual);
+        emisor.agregarLaser(nuevaDireccion);
     }
 
     // TODO: Esto no me convence porque depende de saber desde Bloque
@@ -27,12 +32,18 @@ public class BloqueEspejo extends Bloque {
      * @param direccion la direccion del laser a reflejar.
      * @return la nueva direccion del laser.
      */
-    public Coordenada reflejar(Coordenada ubicacion,Coordenada direccion) {
+    public Direccion reflejar(Coordenada ubicacion, Direccion direccion) { // TODO
         if (this.estaEnBordeHorizontal(ubicacion)) {
-            return new Coordenada(direccion.getX(), -direccion.getY());
+            return new Direccion(direccion.getX(), -direccion.getY());
         } else if (this.estaEnBordeVertical(ubicacion)) {
-            return new Coordenada(-direccion.getX(), direccion.getY());
+            return new Direccion(-direccion.getX(), direccion.getY());
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "R";
+    }
 }
+

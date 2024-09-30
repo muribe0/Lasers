@@ -14,12 +14,12 @@ public class TestGeneracion {
             for (int j = 0; j < alto; j += 1) {
                 Bloque bloque = switch (nivel.charAt(i * ancho + j)) {
                     case '.' -> new BloqueVacio();
-                    case '#' -> new BloqueOpaco();
+                    case 'F' -> new BloqueOpaco();
                     case 'R' -> new BloqueEspejo();
-                    default -> new Bloque();
+                    default -> new BloqueVacio();
                 };
                 var cord = new Coordenada(i * dimension, j * dimension);
-                grilla.agregarBloque(bloque, cord);
+                grilla.colocarBloque(bloque, cord, true);
             }
         }
     }
@@ -29,9 +29,9 @@ public class TestGeneracion {
         Integer alto = grilla.getAlto();
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
-                grilla.agregarBloque(new BloqueVacio(),
+                grilla.colocarBloque(new BloqueVacio(),
                         new Coordenada(i * grilla.getDimensionBloque(),
-                                j * grilla.getDimensionBloque()));
+                                j * grilla.getDimensionBloque()), true); // esto se fuerza para probar la converion de coordenadas
             }
         }
     }
@@ -41,7 +41,7 @@ public class TestGeneracion {
         var grilla = new Grilla(3, 3);
         llenarGrilla(grilla);
 
-        emisores.add(new Emisor(new Laser(new Coordenada(0, 1), new Coordenada(1, 1))));
+        emisores.add(new Emisor(new Coordenada(0, 1), new Direccion(1, 1)));
 
         return new Nivel(grilla, emisores, new ArrayList<>());
     }
@@ -51,10 +51,12 @@ public class TestGeneracion {
         System.out.println("INICIO TEST GRILLA VACIA");
         var emisores = new ArrayList<Emisor>();
         var grilla = new Grilla(3, 3);
-        var nivel = new Nivel(grilla, emisores, new ArrayList<>());
+        var objetivos = new ArrayList<Objetivo>();
+        var nivel = new Nivel(grilla, emisores, objetivos);
         // nivel vacio
 
-        assert Objects.equals(grilla.toString(), "   \n   \n   \n");
+        assert Objects.equals(grilla.toString(), "...\n...\n...\n");
+        System.out.println("FIN TEST GRILLA VACIA");
     }
 
     @Test
@@ -67,36 +69,48 @@ public class TestGeneracion {
     @Test
     public void testGrillaLlena() {
         var grilla = new Grilla(3, 3);
-        String nivel = "..." + ".#." + "...";
+        String nivel = "..." + ".F." + "...";
         llenarGrilla(grilla, nivel);
-        assert Objects.equals(grilla.toString(), "...\n.#.\n...\n");
+        assert Objects.equals(grilla.toString(), "...\n.F.\n...\n");
     }
 
     @Test
-    public void testNivelConLaserYOpaco() {
+    public void testLaserYOpaco() {
         var grilla = new Grilla(3, 3);
-        String nivel = "..." + ".#." + "...";
+        String nivel = "..." + ".F." + "...";
         llenarGrilla(grilla, nivel);
         var emisores = new ArrayList<Emisor>();
-        var emisor = new Emisor(new Laser(new Coordenada(0, 1), new Coordenada(1, 1)));
+        var emisor = new Emisor(new Coordenada(0, 1), new Direccion(1, 1));
         emisores.add(emisor);
         emisor.emitir(grilla);
         assert Objects.equals(emisor.toString(), "(0, 1) -> (2, 3)");
     }
 
     @Test
-    public void testNivelConLaserYEspejo() {
+    public void testLaserYEspejo() {
         var grilla = new Grilla(3, 3);
         String nivel = "..." + ".R." + "...";
         llenarGrilla(grilla, nivel);
         var emisores = new ArrayList<Emisor>();
-        var emisor = new Emisor(new Laser(new Coordenada(0, 1), new Coordenada(1, 1)));
+        var emisor = new Emisor(new Coordenada(0, 1), new Direccion(1, 1));
         emisores.add(emisor);
         emisor.emitir(grilla);
         assert Objects.equals(grilla.toString(), "...\n.R.\n...\n");
-        System.out.println("El laser parte de 0,1 y rebota en 2,3 lateralmente hasta llegar a 0,5");
         assert Objects.equals(emisor.toString(), "(0, 1) -> (2, 3)(2, 3) -> (0, 5)");
+        String OK = Objects.equals(emisor.toString(), "(0, 1) -> (2, 3)(2, 3) -> (0, 5)") ? " OK " : " ERROR ";
+        System.out.println("El laser parte de 0,1 y rebota en 2,3 lateralmente hasta llegar a 0,5" + OK);
 
+    }
+
+    @Test
+    public void testCreacionNivelVacio() {
+        String archivoNivel = "src/main/resources/level0.dat";
+        var nivel = new Nivel(archivoNivel);
+        // ....
+        // .F..
+        // .R.R
+        assert Objects.equals(nivel.getGrilla().toString(), "....\n.F..\n.R.R\n");
+        // TODO: falta testear aca el emisor y objetivo
     }
 
     @Test
