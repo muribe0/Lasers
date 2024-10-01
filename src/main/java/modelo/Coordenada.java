@@ -14,6 +14,14 @@ public class Coordenada {
         this.y = coordenada.getY();
     }
 
+    public void sumarHorizontalmente(Coordenada direccion) {
+        this.x += direccion.getX();
+    }
+
+    public void sumarVerticalmente(Coordenada direccion) {
+        this.y += direccion.getY();
+    }
+
     public void sumar(Coordenada direccion) {
         this.x += direccion.getX();
         this.y += direccion.getY();
