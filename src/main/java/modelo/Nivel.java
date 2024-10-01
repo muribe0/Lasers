@@ -86,16 +86,16 @@ public class Nivel {
     }
 
     private Bloque crearBloqueDesdeSimbolo(char simbolo) {
-        switch (simbolo) {
-            case 'F': return new BloqueOpaco();
-//            case 'B': return new BloqueOpacoMovil();
-            case 'R': return new BloqueEspejo();
-            case 'G': return new BloqueVidrio();
-//            case 'C': return new BloqueCristal();
-            case '.': return new BloqueVacio(); // Espacio vacío con piso
-            case ' ': return null; // Celda sin piso
-            default: return null;
-        }
+        return switch (simbolo) {
+            case 'F' -> new BloqueOpaco();
+            case 'B' -> new BloqueOpacoMovil();
+            case 'R' -> new BloqueEspejo();
+            case 'G' -> new BloqueVidrio();
+            case 'C' -> new BloqueCristal();
+            case '.' -> new BloqueVacio(); // Espacio vacío con piso
+            case ' ' -> null; // Celda sin piso
+            default -> null;
+        };
     }
 
     private void procesarLineaDeEmisoresYObjetivos(String linea) {
