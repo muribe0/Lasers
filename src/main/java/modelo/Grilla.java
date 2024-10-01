@@ -52,6 +52,20 @@ public class Grilla {
     }
 
     /**
+     * Las Coordenadas deben estar en el formato del juego "real". Es decir, de bloques de 2x2.
+     * @param origen
+     * @param destino
+     */
+    public void moverBloque(Coordenada origen, Coordenada destino) {
+        if (estaDentro(destino) && getBloque(destino) instanceof BloqueVacio) {
+            Bloque bloque = getBloque(origen);
+            Bloque vacio = getBloque(destino);
+            this.colocarBloque(vacio, origen,true);
+            this.colocarBloque(bloque,destino,true);
+        }
+    }
+
+    /**
      * Devuelve el bloque en la posicion indicada
      * @param coordenada: coordenada donde se encuentra el bloque. Esta en formato real, no en formato grilla.
      * @return Bloque en la posicion indicada

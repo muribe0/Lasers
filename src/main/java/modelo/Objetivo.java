@@ -2,7 +2,7 @@ package modelo;
 
 
 public class Objetivo {
-    private Coordenada posicion;  // Posición del objetivo en la grilla
+    private final Coordenada posicion;  // Posición del objetivo en la grilla
     private boolean alcanzado;    // Indica si el objetivo ha sido alcanzado por un láser
 
     // Constructor para inicializar el objetivo en una posición dada
@@ -33,9 +33,6 @@ public class Objetivo {
 
     @Override
     public String toString() {
-        return "Objetivo{" +
-                "posicion=" + posicion +
-                ", alcanzado=" + alcanzado +
-                '}';
+        return posicion.toString() + " " + (alcanzado ? "Alcanzado" : "No alcanzado");
     }
 }

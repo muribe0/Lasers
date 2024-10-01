@@ -16,6 +16,9 @@ public class TestGeneracion {
                     case '.' -> new BloqueVacio();
                     case 'F' -> new BloqueOpaco();
                     case 'R' -> new BloqueEspejo();
+                    case 'B' -> new BloqueOpacoMovil();
+                    case 'G' -> new BloqueVidrio();
+                    case 'C' -> new BloqueCristal();
                     default -> new BloqueVacio();
                 };
                 var cord = new Coordenada(i * dimension, j * dimension);
@@ -75,6 +78,18 @@ public class TestGeneracion {
     }
 
     @Test
+    public void testLaserYTodosVacios() {
+        var grilla = new Grilla(3, 3);
+        String nivel = "..." + "..." + "..."; // B esta en
+        llenarGrilla(grilla, nivel);
+        assert Objects.equals(grilla.toString(), "...\n...\n...\n");
+
+        var emisor = new Emisor(new Coordenada(0, 1), new Direccion(1, 1));
+        emisor.emitir(grilla);
+        assert Objects.equals(emisor.toString(), "(0, 1) -> (4, 5)"); // TODO ESTO DEBE TERMINAR EN (5,6)
+    }
+
+    @Test
     public void testLaserYOpaco() {
         var grilla = new Grilla(3, 3);
         String nivel = "..." + ".F." + "...";
@@ -103,6 +118,23 @@ public class TestGeneracion {
     }
 
     @Test
+    public void testLaserYCristal() {
+        var grilla = new Grilla(3, 3);
+        String nivel = "..." + ".C." + "..."; // B esta en
+
+        // ...
+        // .B.
+        // ...
+        llenarGrilla(grilla, nivel);
+        assert Objects.equals(grilla.toString(), "...\n.C.\n...\n");
+
+
+        var emisor = new Emisor(new Coordenada(0, 1), new Direccion(1, 1));
+        emisor.emitir(grilla);
+        assert Objects.equals(emisor.toString(), "(0, 1) -> (2, 3)(4, 3) -> (5, 4)");
+    }
+
+    @Test
     public void testCreacionNivelVacio() {
         String archivoNivel = "src/main/resources/level0.dat";
         var nivel = new Nivel(archivoNivel);
@@ -111,7 +143,25 @@ public class TestGeneracion {
         // .R.R
         assert Objects.equals(nivel.getGrilla().toString(), "....\n.F..\n.R.R\n");
         // TODO: falta testear aca el emisor y objetivo
+        assert nivel.getEmisores().size() == 1;
+        assert nivel.getObjetivos().size() == 1;
+        assert Objects.equals(nivel.getObjetivos().getFirst().toString(), "(8, 9) No alcanzado");
+        assert Objects.equals(nivel.getEmisores().getFirst().toString(), "(0, 1) -> (0, 1)");
     }
+
+    @Test
+    public void testMoverBloqueOpacoMovil() {
+        var grilla = new Grilla(3, 3);
+        String nivel = "..." + ".B." + "..."; // B esta en
+        // ...
+        // .B.
+        // ...
+        llenarGrilla(grilla, nivel);
+        grilla.moverBloque(new Coordenada(3, 3), new Coordenada(5, 3));
+        assert Objects.equals(grilla.toString(), "...\n..B\n...\n");
+    }
+
+
 
     @Test
     public void testVarios() {
