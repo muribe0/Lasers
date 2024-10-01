@@ -7,9 +7,9 @@ public class BloqueOpaco extends Bloque {
         return true;
     }
 
-    public void interactuarConLaser(Laser laser) {
-        // Detiene el láser
-        // laser.detener();
+    @Override
+    public void interactuarConLaser(Emisor emisor) {
+        emisor.detener();
     }
 
     @Override
