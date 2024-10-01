@@ -41,17 +41,21 @@ public class Emisor {
         // mientras el ultimo laser no llegue al borde de la grilla o a un bloque opaco
         Laser ultimo = getPunta();
 
-        while (ultimo != null) {
+        while (ultimo != null ) {
             if (!ultimo.avanzar(grilla)) {
                 Bloque siguienteBloque = ultimo.getSiguienteBloque(grilla);
                 if (siguienteBloque.esOpaco() || siguienteBloque.esVacio() || !grilla.estaDentro(ultimo.getDestino())) {
                     return;
-                } else if (siguienteBloque.esEspejo()) {
+                } else {
                     siguienteBloque.interactuarConLaser(this);
                     ultimo = getPunta();
                 }
             }
         }
+    }
+
+    public void detener() {
+        this.lasers.add(null);
     }
 
     public Laser getPunta() {
@@ -68,6 +72,10 @@ public class Emisor {
         Coordenada destino = ultimo.getDestino();
         Laser nuevo = new Laser(destino, direccion);
         this.lasers.add(nuevo);
+    }
+
+    public void agregarLaser(Laser laser) {
+        this.lasers.add(laser);
     }
 
     /**
