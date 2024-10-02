@@ -19,6 +19,7 @@ public class Coordenada {
         this.y += direccion.getY();
     }
 
+
     public void restar(Coordenada direccion) {
         this.x -= direccion.getX();
         this.y -= direccion.getY();
