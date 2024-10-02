@@ -14,11 +14,18 @@ public class Coordenada {
         this.y = coordenada.getY();
     }
 
+    public void sumarHorizontalmente(Coordenada direccion) {
+        this.x += direccion.getX();
+    }
+
+    public void sumarVerticalmente(Coordenada direccion) {
+        this.y += direccion.getY();
+    }
+
     public void sumar(Coordenada direccion) {
         this.x += direccion.getX();
         this.y += direccion.getY();
     }
-
 
     public void restar(Coordenada direccion) {
         this.x -= direccion.getX();
@@ -37,7 +44,7 @@ public class Coordenada {
     *  verifia si el laser ha llegado a una coordenada objetivo, puedes usar equals.
        Podría ser útil para determinar si un bloque específico se encuentra en la misma
        posición que otro elemento (por ejemplo, un emisor o un objetivo).
-
+    */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -45,7 +52,7 @@ public class Coordenada {
         Coordenada that = (Coordenada) obj;
         return x.equals(that.x) && y.equals(that.y);
     }
-    */
+
 
     public String toString() {
         return "(" + this.x + ", " + this.y + ")";

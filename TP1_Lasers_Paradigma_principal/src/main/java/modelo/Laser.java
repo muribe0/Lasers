@@ -2,19 +2,21 @@ package modelo;
 
 public class Laser {
     private Coordenada origen;
-    private Coordenada direccion;
+    private Direccion direccion;
     private Coordenada destino;
 
-    public Laser(Coordenada origen, Coordenada direccion) {
+    public Laser(Coordenada origen, Direccion direccion) {
         this.origen = origen;
         this.direccion = direccion;
         this.destino = new Coordenada(origen);
     }
+
     /**
-     * el laser avanza el laser en la direccion que tiene asignada
+     * Avanza el laser en la direccion que tiene asignada.
      * @return falso cuando el laser llega al borde de la grilla o a un bloque opaco.
      */
     public boolean avanzar(Grilla grilla) {
+
         this.destino.sumar(this.direccion);
         while (grilla.estaDentro(this.destino) && this.getSiguienteBloque(grilla).esVacio()) {
             this.destino.sumar(this.direccion);
@@ -23,15 +25,6 @@ public class Laser {
             this.destino.restar(this.direccion);
         }
         return false;
-    }
-
-    public void detener() {
-        // Lógica para detener el láser (por ejemplo, no avanzar más)
-        getDireccion() = new Coordenada(0, 0); // Podríamos considerar esta dirección como "detenida"
-    }
-
-    public void setDireccion(Coordenada nuevaDireccion) {
-        getDireccion() = nuevaDireccion;
     }
 
     /**
@@ -56,7 +49,7 @@ public class Laser {
     /**
      * @return la direccion del Laser.
      */
-    public Coordenada getDireccion() {
+    public Direccion getDireccion() {
         return this.direccion;
     }
 }
