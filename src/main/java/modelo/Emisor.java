@@ -1,6 +1,6 @@
 package modelo;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Emisor {
@@ -13,7 +13,7 @@ public class Emisor {
      * @param direccion: Direccion en la que se movera el laser.
      */
     public Emisor(Coordenada origen, Direccion direccion) {
-        this.lasers = new ArrayList<>();
+        this.lasers = new LinkedList<>();
         this.lasers.add(new Laser(origen, direccion));
     }
 
@@ -23,43 +23,72 @@ public class Emisor {
      * @post el haz de luz solo tiene un laser.
      */
     private void resetear() {
-        Laser inicio = this.lasers.get(0);
+        this.lasers.getFirst().resetear();
         this.lasers.clear();
-        this.lasers.add(inicio);
     }
 
     /**
      * Emite el laser y lo hace avanzar por la grilla.
      * Si el laser llega a un bloque opaco o a un borde, se detiene.
-     * Si llega a un bloque Espejo, cambia su direccion creando otro Laser.
+     * Si llega a un bloque Espejo, se refleja.
+     * Si llega a un bloque Cristal, se refracta.
+     * Si llega a un bloque Vidrio, sigue su camino y crea otro emisor.
      *
      * @param grilla es la grilla completa
      */
     public void emitir(Grilla grilla) {
+        Laser ultimo = this.lasers.getFirst();
         this.resetear();
-
         // mientras el ultimo laser no llegue al borde de la grilla o a un bloque opaco
-        Laser ultimo = getPunta();
+        emitirDesde(ultimo, grilla);
+    }
 
-        while (ultimo != null ) {
-            if (!ultimo.avanzar(grilla)) {
-                Bloque siguienteBloque = ultimo.getSiguienteBloque(grilla);
-                if (siguienteBloque.esOpaco() || siguienteBloque.esVacio() || !grilla.estaDentro(ultimo.getDestino())) {
-                    return;
-                } else {
-                    siguienteBloque.interactuarConLaser(this);
-                    ultimo = getPunta();
+    /**
+     * Emitir desde el laser dado.
+     * @param laser
+     */
+    private void emitirDesde(Laser laser, Grilla grilla) {
+        LinkedList<Laser> lasersBifurcados = new LinkedList<>();
+        laser.resetear();
+        while (laser != null && ! laser.estaDetenido()) {
+            laser = new Laser(laser.getDestino(), laser.getDireccion());
+            // si esta en un borde horizontal, fijarse el siguiente bloque e interactuar con ese bloque
+            if (interactuarConSiguienteBloque(laser, grilla) && ! laser.noSeHaMovido()) {
+                if (laser.estaBifurcado()) {
+                    lasersBifurcados.add(laser.getBifurcado());
                 }
+                agregarLaser(laser);
             }
+        }
+        for (Laser bifurcado : lasersBifurcados) {
+            emitirDesde(bifurcado, grilla);
         }
     }
 
-    public void detener() {
-        this.lasers.add(null);
+    /**
+     * Hace que un tramo de laser interactue con el bloque siguiente.
+     * @param laser
+     * @param grilla
+     */
+    public boolean interactuarConSiguienteBloque(Laser laser, Grilla grilla) {
+        var destino = new Coordenada(laser.getDestino());
+        if (grilla.estaEnBordeHorizontal(destino)) {
+            destino.sumarVerticalmente(laser.getDireccion());
+        } else if (grilla.estaEnBordeVertical(destino)) {
+            destino.sumarHorizontalmente(laser.getDireccion());
+        }
+        if (! grilla.estaDentro(destino)) {
+            laser.detener();
+            return false;
+        }
+        var siguienteBloque = grilla.getBloque(destino);
+        siguienteBloque.interactuarConLaser(laser);
+        return true;
     }
 
+
     public Laser getPunta() {
-        return this.lasers.get(this.lasers.size() - 1);
+        return this.lasers.getLast();
     }
 
     /**
