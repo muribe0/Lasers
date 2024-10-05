@@ -39,23 +39,11 @@ public class TestGeneracion {
         }
     }
 
-    private static Nivel crearNivel() {
-        var emisores = new ArrayList<Emisor>();
-        var grilla = new Grilla(3, 3, 2);
-        llenarGrilla(grilla);
-
-        emisores.add(new Emisor(new Coordenada(0, 1), new Direccion(1, 1)));
-
-        return new Nivel(grilla, emisores, new ArrayList<>());
-    }
 
     @Test
     public void testGrillaVacia() {
         System.out.println("INICIO TEST GRILLA VACIA");
-        var emisores = new ArrayList<Emisor>();
         var grilla = new Grilla(3, 3, 2);
-        var objetivos = new ArrayList<Objetivo>();
-        var nivel = new Nivel(grilla, emisores, objetivos);
         // nivel vacio
 
         assert Objects.equals(grilla.toString(), "...\n...\n...\n");
