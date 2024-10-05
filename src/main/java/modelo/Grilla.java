@@ -1,8 +1,10 @@
 package modelo;
 
+import java.awt.geom.CubicCurve2D;
+
 public class Grilla {
     private Bloque[][] grilla;
-    private final static Integer dimensionBloque = 2;
+    private final Integer dimensionBloque;
 
     /**
      * Convierte las coordenadas reales a la posicion de la matriz grilla
@@ -12,23 +14,12 @@ public class Grilla {
      * @param coordenada: coordenada del plano real. Cada bloque tiene dimensionBloque (2)
      * @return Coordenada es la posicion en la matriz grilla.
      */
-    private Coordenada convertirCoordenadas(Coordenada coordenada) {
-        return new Coordenada(coordenada.getX() / dimensionBloque, coordenada.getY() / dimensionBloque);
+    private Coordenada convertirCoordenadasRealesAMatriz(Coordenada coordenada) {
+        var coordenadaRedmiensionada = new Coordenada(coordenada);
+        coordenadaRedmiensionada.contraer(dimensionBloque);
+        return coordenadaRedmiensionada;
     }
 
-    /**
-     * Genera una grilla con Bloques vacios
-     * @param ancho: ancho de la grilla (CANTIDAD de bloques a lo ancho)
-     * @param alto: alto de la grilla (CANTIDAD de bloques a lo alto)
-     */
-    public Grilla(Integer ancho, Integer alto) {
-        this.grilla = new Bloque[alto][ancho];
-        for (int i = 0; i < alto; i++) {
-            for (int j = 0; j < ancho; j++) {
-                this.grilla[i][j] = new BloqueVacio();
-            }
-        }
-    }
 
     public Integer getAncho() {
         return this.grilla[0].length;
@@ -45,8 +36,9 @@ public class Grilla {
      * @param convertir: si es true, convierte las coordenadas reales a la posicion de la matriz grilla, sino no lo hace y las usa como fila/columna de la celda.
      */
     public void colocarBloque(Bloque bloque, Coordenada coordenada, boolean convertir) {
+        // TODO: Probablemente deba cambiar la coordenada del Bloque si detecta que son distintas.
         if (convertir) {
-            coordenada = convertirCoordenadas(coordenada);
+            coordenada = convertirCoordenadasRealesAMatriz(coordenada);
         }
         this.grilla[coordenada.getY()][coordenada.getX()] = bloque;
     }
@@ -57,11 +49,12 @@ public class Grilla {
      * @param destino
      */
     public void moverBloque(Coordenada origen, Coordenada destino) {
-        if (estaDentro(destino) && getBloque(destino) instanceof BloqueVacio) {
+
+        if (estaDentro(destino) && getBloque(destino) instanceof BloqueVacio && !(getBloque(origen) instanceof BloqueOpaco)) {
             Bloque bloque = getBloque(origen);
             Bloque vacio = getBloque(destino);
-            this.colocarBloque(vacio, origen,true);
-            this.colocarBloque(bloque,destino,true);
+            colocarBloque(vacio, origen,true);
+            colocarBloque(bloque,destino,true);
         }
     }
 
@@ -71,7 +64,7 @@ public class Grilla {
      * @return Bloque en la posicion indicada
      */
     public Bloque getBloque(Coordenada coordenada) {
-        coordenada = convertirCoordenadas(coordenada);
+        coordenada = convertirCoordenadasRealesAMatriz(coordenada);
         return this.grilla[coordenada.getY()][coordenada.getX()];
     }
 
@@ -107,5 +100,39 @@ public class Grilla {
      */
     public Integer getDimensionBloque() {
         return dimensionBloque;
+    }
+
+    /**
+     * Devuelve True si una coordenada se encuentra en el borde horizontal de un bloque
+     * @param coordenada: coordenada a verificar
+     */
+    public boolean estaEnBordeHorizontal(Coordenada coordenada) {
+        return coordenada.getY() % dimensionBloque == 0;
+    }
+
+    /**
+     * Devuelve True si una coordenada se encuentra en el borde vertical de un bloque
+     * @param coordenada: coordenada a verificar
+     */
+    public boolean estaEnBordeVertical(Coordenada coordenada) {
+        return coordenada.getX() % dimensionBloque == 0;
+    }
+
+    // TESTING
+    /**
+     * Genera una grilla con Bloques vacios
+     * @param ancho: ancho de la grilla (CANTIDAD de bloques a lo ancho)
+     * @param alto: alto de la grilla (CANTIDAD de bloques a lo alto)
+     */
+    public Grilla(Integer ancho, Integer alto, Integer dimensionBloque) {
+        this.grilla = new Bloque[alto][ancho];
+        this.dimensionBloque = dimensionBloque;
+        for (int i = 0; i < alto; i++) {
+            for (int j = 0; j < ancho; j++) {
+                Coordenada ubicacion = new Coordenada(j, i);
+                ubicacion.redimensionar(dimensionBloque);
+                this.grilla[i][j] = new BloqueVacio(dimensionBloque);
+            }
+        }
     }
 }
