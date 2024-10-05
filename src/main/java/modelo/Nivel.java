@@ -128,6 +128,7 @@ public class Nivel {
         Coordenada origen = new Coordenada(x, y);
         Coordenada destino = new Coordenada(nuevoX, nuevoY);
         grilla.moverBloque(origen, destino);
+  
     }
 
     public boolean validarSolucion() {
@@ -137,6 +138,22 @@ public class Nivel {
             }
         }
         return true;
+    }
+
+    // Actualiza el estado del nivel, verificando si todos los objetivos fueron alcanzados.
+    public void verificarEstado() {
+        for (Emisor emisor : emisores) {
+            emisor.emitir(grilla);
+        }
+        for (Objetivo objetivo : objetivos) {
+            // Si la posición del objetivo ha sido alcanzada por un láser, marcar como alcanzado.
+            for (Emisor emisor : emisores) {
+                Laser laser = emisor.getPunta();
+                if (laser.getDestino().equals(objetivo.getPosicion())) {
+                    objetivo.marcarComoAlcanzado();
+                }
+            }
+        }
     }
 
     /*
