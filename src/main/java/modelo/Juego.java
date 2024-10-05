@@ -23,11 +23,8 @@ public class Juego {
     }
 
     private void cargarNivelDesdeArchivo(String archivoNivel) {
-        Grilla grilla = new Grilla(10, 10); // Crear una grilla vacía
-        List<Emisor> emisores = new ArrayList<>();
-        List<Objetivo> objetivos = new ArrayList<>();
 
-        Nivel nivel = new Nivel(grilla, emisores, objetivos);
+        Nivel nivel = new Nivel(archivoNivel);
         nivel.cargarDesdeArchivo(archivoNivel);
 
         niveles.add(nivel);
