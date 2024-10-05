@@ -5,6 +5,10 @@ public class Direccion extends Coordenada {
         super(x, y);
     }
 
+    public Direccion(Direccion direccion) {
+        super(direccion.getX(), direccion.getY());
+    }
+
     public Direccion(String direccion) {
         super(
                 switch (direccion) {
