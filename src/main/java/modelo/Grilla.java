@@ -1,7 +1,5 @@
 package modelo;
 
-import java.awt.geom.CubicCurve2D;
-
 public class Grilla {
     private Bloque[][] grilla;
     private final Integer dimensionBloque;
