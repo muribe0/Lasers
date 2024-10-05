@@ -115,7 +115,7 @@ public class Nivel {
         }
     }
 
-    // deberia estar en nivel ???
+    //debería estar en nivel???
     public void moverBloque(int x, int y, int nuevoX, int nuevoY) {
         // Lógica para mover el bloque en la grilla
         // grilla.moverBloque(x, y, nuevoX, nuevoY);
@@ -128,6 +128,22 @@ public class Nivel {
             }
         }
         return true;
+    }
+
+    // Actualiza el estado del nivel, verificando si todos los objetivos fueron alcanzados.
+    public void verificarEstado() {
+        for (Emisor emisor : emisores) {
+            emisor.emitir(grilla);
+        }
+        for (Objetivo objetivo : objetivos) {
+            // Si la posición del objetivo ha sido alcanzada por un láser, marcar como alcanzado.
+            for (Emisor emisor : emisores) {
+                Laser laser = emisor.getPunta();
+                if (laser.getDestino().equals(objetivo.getPosicion())) {
+                    objetivo.marcarComoAlcanzado();
+                }
+            }
+        }
     }
 
     /*
