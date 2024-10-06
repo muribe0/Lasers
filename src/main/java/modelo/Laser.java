@@ -126,6 +126,10 @@ public class Laser {
         return this.bifurcado;
     }
 
+    public boolean pasaPor(Coordenada coordenada) {
+        return this.origen.equals(coordenada) || this.destino.equals(coordenada);
+    }
+
     public String toString() {
         return this.origen.toString() + " -> " + this.destino.toString();
     }
