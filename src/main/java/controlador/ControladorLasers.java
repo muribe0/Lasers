@@ -1,27 +1,39 @@
 package controlador;
 
-import modelo.Nivel;
-import vista.VistaLasers;
+import modelo.Juego;
 
 public class ControladorLasers {
-    private Nivel nivel; // Modelo
-    private VistaLasers vista; // Vista
+    private Juego juego;
 
-    public ControladorLasers(Nivel nivel) {
-        this.nivel = nivel;
-        this.vista = new VistaLasers(nivel);
+    public ControladorLasers(Juego juego) {
+        this.juego = juego;
     }
 
     public void iniciarJuego() {
-        vista.start(new Stage());
+        // Hay q configurar la lógica del juego
+        // y la interacción con la interfaz gráfica.
+        // Por ejemplo, inicializar la vista y los eventos.
+
+        // imprime  el estado inicial del juego.
+        System.out.println("Juego iniciado. Nivel actual: " + juego.getNivelActual().toString());
     }
 
-    public void moverBloque(Integer x, Integer y, Integer nuevoX, Integer nuevoY) {
-        nivel.moverBloque(x, y, nuevoX, nuevoY);
-        vista.actualizarGrilla();
+    public void moverBloque(int x, int y, int nuevoX, int nuevoY) {
+        juego.moverBloque(x, y, nuevoX, nuevoY);
+        juego.verificarNivelCompletado();
+        if (juego.isNivelCompletado()) {
+            // aca yo pienso q podemos manejar la transición al siguiente nivel
+            System.out.println("¡Nivel completado!");
+            // Cargar el siguiente nivel
+            // juego.cargarNivel(siguienteNivel);
+        }
     }
 
-    public boolean verificarGanador() {
-        return nivel.validarSolucion();
+    public void verificarGanador() {
+        if (juego.esJuegoGanado()) {
+            // existe ya que no se muevan mas los bloques
+            //tambien puede haber un mensaje, por ejemplo:
+            System.out.println("¡Has ganado el juego!");
+        }
     }
 }
