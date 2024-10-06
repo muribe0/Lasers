@@ -50,7 +50,7 @@ public class Emisor {
     private void emitirDesde(Laser laser, Grilla grilla) {
         LinkedList<Laser> lasersBifurcados = new LinkedList<>();
         laser.resetear();
-        while (laser != null && ! laser.estaDetenido()) {
+        while (! laser.estaDetenido()) {
             laser = new Laser(laser.getDestino(), laser.getDireccion());
             // si esta en un borde horizontal, fijarse el siguiente bloque e interactuar con ese bloque
             if (interactuarConSiguienteBloque(laser, grilla) && ! laser.noSeHaMovido()) {
@@ -105,6 +105,15 @@ public class Emisor {
 
     public void agregarLaser(Laser laser) {
         this.lasers.add(laser);
+    }
+
+    public boolean pasaPor(Coordenada coordenada) {
+        for (Laser laser : this.lasers) {
+            if (laser.pasaPor(coordenada)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
