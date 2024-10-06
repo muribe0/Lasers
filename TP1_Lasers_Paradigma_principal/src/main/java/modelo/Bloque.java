@@ -1,6 +1,11 @@
 package modelo;
 
-public abstract class Bloque {
+public abstract class Bloque { // Considerar implementar una interfaz para los bloques.
+    private Integer dimension;
+
+    public Bloque(Integer dimension) {
+        this.dimension = dimension;
+    }
 
     public boolean esMovible() {
         return false;
@@ -27,31 +32,24 @@ public abstract class Bloque {
     }
 
     // Mét.odo abstracto que cada subclase debe implementar.
-    public abstract void interactuarConLaser(Emisor emisor);
+    public abstract void interactuarConLaser(Laser laser);
 
-    // TODO: Esto no me convence porque depende de saber desde Bloque
-    // que cada bloque tiene 2 de ancho (El 2 puede ser atributo de Bloque, pero no se si me convence)
+    /**
+     * Devuelve True si una coordenada se encuentra en el borde horizontal de un bloque
+     * @param coordenada: coordenada a verificar
+     * @return True si la coordenada se encuentra en el borde horizontal de un bloque
+     */
     public boolean estaEnBordeVertical(Coordenada coordenada) {
-        return coordenada.getX() % 2 == 0;
-    }
-
-    public boolean estaEnBordeHorizontal(Coordenada coordenada) {
-        return coordenada.getY() % 2 == 0;
+        return coordenada.getX() % dimension == 0;
     }
 
     /**
-     * Refleja la direccion del laser en el bloque espejo.
-     * @param ubicacion el punto donde se encuentra la punta del laser a reflejar.
-     * @param direccion la direccion del laser a reflejar.
-     * @return la nueva direccion del laser.
+     * Devuelve True si una coordenada se encuentra en el borde vertical de un bloque
+     * @param coordenada: coordenada a verificar
+     * @return True si la coordenada se encuentra en el borde vertical de un bloque
      */
-    public Direccion reflejar(Coordenada ubicacion, Direccion direccion) { // TODO
-        if (this.estaEnBordeHorizontal(ubicacion)) {
-            return new Direccion(direccion.getX(), -direccion.getY());
-        } else if (this.estaEnBordeVertical(ubicacion)) {
-            return new Direccion(-direccion.getX(), direccion.getY());
-        }
-        return null;
+    public boolean estaEnBordeHorizontal(Coordenada coordenada) {
+        return coordenada.getY() % dimension == 0;
     }
 
     @Override

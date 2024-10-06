@@ -2,14 +2,18 @@ package modelo;
 
 public class BloqueOpaco extends Bloque {
 
+    public BloqueOpaco(Integer dimension) {
+        super(dimension);
+    }
+
     @Override
     public boolean esOpaco() {
         return true;
     }
 
     @Override
-    public void interactuarConLaser(Emisor emisor) {
-        emisor.detener();
+    public void interactuarConLaser(Laser laser) {
+        laser.detener();
     }
 
     @Override
@@ -17,5 +21,3 @@ public class BloqueOpaco extends Bloque {
         return "F";
     }
 }
-
-

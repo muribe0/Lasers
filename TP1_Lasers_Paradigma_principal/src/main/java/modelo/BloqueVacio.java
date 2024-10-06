@@ -1,16 +1,18 @@
 package modelo;
 
 public class BloqueVacio extends Bloque {
-    private Coordenada coordenada;
+
+    public BloqueVacio(Integer dimension) {
+        super(dimension);
+    }
 
     @Override
     public boolean esVacio() {
         return true;
     }
 
-    public void interactuarConLaser(Emisor emisor) {
-        // El láser continúa sin ser afectado
-        // laser.continuar();
+    public void interactuarConLaser(Laser laser) {
+        laser.continuar();
     }
 
     public String toString() {
