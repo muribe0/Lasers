@@ -7,25 +7,27 @@ import modelo.Bloque;
 import modelo.Grilla;
 import modelo.Coordenada;
 
-public class GrillaVista extends GridPane {
-    private Grilla grillaModelo;
+public class VistaGrilla extends GridPane {
+    private Grilla grilla;
 
-    public GrillaVista(Grilla grilla) {
-        this.grillaModelo = grilla;
+    private Integer TAM_CELDA_PX = 40;
+
+    public VistaGrilla(Grilla grilla) {
+        this.grilla = grilla;
         inicializarBloques();
     }
 
     // Inicializa la vista visual de los bloques basados en el modelo.
     // REVISAR
     private void inicializarBloques() {
-        int dimensionBloque = grillaModelo.getDimensionBloque();
+        Integer dimensionBloque = grilla.getDimensionBloque();
 
-        for (int x = 0; x < grillaModelo.getAncho(); x++) {
-            for (int y = 0; y < grillaModelo.getAlto(); y++) {
-                Coordenada coordenada = new Coordenada(x, y);
-                Bloque bloque = grillaModelo.obtenerBloque(coordenada);
-                Rectangle bloqueVisual = crearRectanguloParaBloque(bloque, dimensionBloque);
-                this.add(bloqueVisual, x, y);
+        for (int x = 0; x < grilla.getAncho(); x++) {
+            for (int y = 0; y < grilla.getAlto(); y++) {
+                Coordenada coordenada = new Coordenada(x * dimensionBloque, y * dimensionBloque);
+                Bloque bloque = grilla.getBloque(coordenada);
+                Rectangle bloqueVisual = crearRectanguloParaBloque(bloque, dimensionBloque * TAM_CELDA_PX);
+                this.add(bloqueVisual, x , y );
             }
         }
     }
@@ -40,7 +42,7 @@ public class GrillaVista extends GridPane {
         } else if (bloque instanceof modelo.BloqueOpacoMovil) {
             rect.setFill(Color.DARKGRAY);
         } else if (bloque instanceof modelo.BloqueEspejo) {
-            rect.setFill(Color.SILVER);
+            rect.setFill(Color.PURPLE);
         } else if (bloque instanceof modelo.BloqueVidrio) {
             rect.setFill(Color.LIGHTBLUE);
         } else if (bloque instanceof modelo.BloqueCristal) {
@@ -50,6 +52,7 @@ public class GrillaVista extends GridPane {
         } else if (bloque instanceof modelo.BloqueSinPiso) {
             rect.setFill(Color.BLACK);
         }
+        rect.setStroke(Color.DARKORANGE);
         return rect;
     }
 
@@ -61,7 +64,12 @@ public class GrillaVista extends GridPane {
 
     // Método para mover un bloque visualmente.
     public void moverBloque(int x, int y, int nuevoX, int nuevoY) {
-        grillaModelo.moverBloque(new Coordenada(x, y), new Coordenada(nuevoX, nuevoY));
+        grilla.moverBloque(new Coordenada(x, y), new Coordenada(nuevoX, nuevoY));
         actualizarVista();
     }
+
+    public Integer getTamanioDeCelda() {
+        return TAM_CELDA_PX * grilla.getDimensionBloque();
+    }
+
 }
