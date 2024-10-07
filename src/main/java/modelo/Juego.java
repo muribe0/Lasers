@@ -73,4 +73,12 @@ public class Juego {
         }
         return true;
     }
+
+    public Nivel getNivelActual() {
+        return nivelActual;
+    }
+
+    public boolean isNivelCompletado() {
+        return nivelCompletado;
+    }
 }
