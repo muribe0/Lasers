@@ -14,10 +14,11 @@ public class VistaNivel {
     private Integer alto;
     private Integer ancho;
     private Scene scene;
-    private VBox vbox;
+    private StackPane stackPane;
     private HBox buttons;
 
     private VistaGrilla panelGrilla;
+    private VistaLasers panelLaser;
 
     public VistaNivel(Stage stage, Nivel nivel) {
         this.nivel = nivel;
@@ -25,32 +26,32 @@ public class VistaNivel {
         this.ancho = nivel.getGrilla().getAncho();
 
         this.panelGrilla = new VistaGrilla(nivel.getGrilla());
+        this.panelLaser = new VistaLasers(nivel);
 
-        this.vbox = new VBox();
-        this.buttons = new HBox();
+        this.stackPane = new StackPane();
 
-        vbox.getChildren().add(panelGrilla);
-
-        String rutaNiveles[] = { "level0.dat", "level1.dat", "level2.dat" };
-        poblarBotones(rutaNiveles);
+        stackPane.getChildren().addAll(panelGrilla, panelLaser);
 
         var tamanioBloque = panelGrilla.getTamanioDeCelda();
 
         // Parte visual
-        var label = new Label("Hola mundo!");
 
-        scene = new Scene(vbox, ancho * tamanioBloque, alto * tamanioBloque + tamanioBloque);
+        scene = new Scene(stackPane, ancho * tamanioBloque, alto * tamanioBloque + tamanioBloque);
         stage.setScene(scene);
         stage.show();
     }
 
     private void poblarBotones(String rutaNiveles[]) {
+        //String rutaNiveles[] = { "level0.dat", "level1.dat", "level2.dat" };
+        //        poblarBotones(rutaNiveles);
+        // usar afuera
+
         for (var ruta : rutaNiveles) {
             Button boton = new Button("src/main/resources/" + ruta);
             buttons.getChildren().add(boton);
         }
 
-        vbox.getChildren().add(buttons);
+        stackPane.getChildren().add(buttons);
     }
 
 }

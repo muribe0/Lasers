@@ -18,6 +18,9 @@ public class Nivel {
         this.emisores = new ArrayList<Emisor>();
         this.objetivos = new ArrayList<Objetivo>();
         cargarDesdeArchivo(archivoNivel);
+        for (var emisor : emisores) {
+            emisor.emitir(grilla);
+        }
     }
 
 

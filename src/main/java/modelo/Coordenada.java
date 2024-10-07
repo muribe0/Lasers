@@ -14,6 +14,11 @@ public class Coordenada {
         this.y = coordenada.getY();
     }
 
+    public Coordenada(Coordenada coordenada, Integer contraer) {
+        this.x = coordenada.getX() / contraer;
+        this.y = coordenada.getY() / contraer;
+    }
+
     public void contraer(Integer dimension) {
         this.x /= dimension;
         this.y /= dimension;

@@ -1,5 +1,7 @@
 package modelo;
 
+import javafx.scene.shape.Line;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -114,6 +116,14 @@ public class Emisor {
             }
         }
         return false;
+    }
+
+    public List<Laser> getTramos() {
+        return this.lasers;
+    }
+
+    public Coordenada getOrigen() {
+        return this.lasers.getFirst().getOrigen();
     }
 
     /**

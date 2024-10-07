@@ -147,4 +147,8 @@ public class Laser {
     public Direccion getDireccion() {
         return this.direccion;
     }
+
+    public Coordenada getOrigen() {
+        return this.origen;
+    }
 }

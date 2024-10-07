@@ -1,73 +1,52 @@
-//package vista;
-//
-//import javafx.application.Application;
-//import javafx.scene.Scene;
-//import javafx.scene.control.Button;
-//import javafx.scene.layout.GridPane;
-//import javafx.scene.layout.VBox;
-//import javafx.stage.Stage;
-//import modelo.Nivel;
-//import modelo.Coordenada;
-//
-//public class VistaLasers extends Application {
-//    private Nivel nivel; // Instancia del nivel
-//    private GridPane grillaVisual; // Grilla para mostrar los bloques
-//
-//    public VistaLasers(Nivel nivel) {
-//        this.nivel = nivel;
-//    }
-//
-//    @Override
-//    public void start(Stage primaryStage) {
-//        primaryStage.setTitle("Lasers Game");
-//
-//        grillaVisual = new GridPane();
-//        cargarGrilla();
-//
-//        VBox root = new VBox();
-//        root.getChildren().add(grillaVisual);
-//
-//        Scene scene = new Scene(root, 800, 600);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
-//
-//    private void cargarGrilla() {
-//        int filas = nivel.getGrilla().getFilas();
-//        int columnas = nivel.getGrilla().getColumnas();
-//
-//        for (int fila = 0; fila < filas; fila++) {
-//            for (int columna = 0; columna < columnas; columna++) {
-//                Coordenada posicion = new Coordenada(columna, fila);
-//                var bloque = nivel.getGrilla().getBloque(posicion); // Obtener bloque de la grilla
-//                Button botonBloque = crearBotonBloque(bloque, posicion);
-//                grillaVisual.add(botonBloque, columna, fila);
-//            }
-//        }
-//    }
-//
-//    private Button crearBotonBloque(var bloque, Coordenada posicion) {
-//        Button boton = new Button(bloque.toString()); // hay q cambiar por el símbolo del bloque
-//        boton.setPrefSize(50, 50);
-//
-//        // Event handler para mover bloques
-//        boton.setOnAction(e -> {
-//            // Lógica para mover el bloque si es un bloque móvil
-//            if (bloque instanceof esMovible) {
-//                moverBloque(posicion.getX(), posicion.getY(), posicion.getX() + 1, posicion.getY());
-//            }
-//        });
-//        return boton;
-//    }
-//
-//    private void moverBloque(Integer x, Integer y, Integer nuevoX, Integer nuevoY) {
-//        nivel.moverBloque(x, y, nuevoX, nuevoY);
-//        // Luego actualizar la vista
-//        grillaVisual.getChildren().clear();
-//        cargarGrilla();
-//    }
-//
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
-//}
+package vista;
+
+import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Line;
+import modelo.Emisor;
+import modelo.Nivel;
+import modelo.Coordenada;
+
+import java.util.List;
+
+public class VistaLasers extends StackPane {
+    private List<Emisor> emisores; // Grilla para mostrar los bloques
+
+    private Integer TAM_CELDA_PX = 40;
+
+
+    public VistaLasers(Nivel nivel) {
+        this.emisores = nivel.getEmisores();
+        this.setAlignment(Pos.TOP_LEFT);
+//        inicializarEmisores();
+        var tramo1 = new Line(0, 40, 40, 80);
+        tramo1.setTranslateY(40);
+        this.getChildren().add(tramo1);
+    }
+
+    private void inicializarEmisores() {
+        for (Emisor emisor : emisores) {
+            Coordenada origen = emisor.getOrigen();
+            inicializarEmisor(origen, emisor);
+        }
+    }
+
+    private void inicializarEmisor(Coordenada origen, Emisor emisor) {
+        Coordenada desde = origen;
+        for (var tramo : emisor.getTramos()) {
+            Coordenada hasta = tramo.getDestino();
+            Line linea = new Line(desde.getX() * TAM_CELDA_PX, desde.getY() * TAM_CELDA_PX, hasta.getX() * TAM_CELDA_PX, hasta.getY() * TAM_CELDA_PX);
+            linea.setFill(Color.RED);
+            linea.setStroke(Color.RED);
+            Integer x = desde.getX() / 2;
+            Integer y = desde.getY() / 2;
+            this.getChildren().add(linea);
+            desde = hasta;
+        }
+    }
+
+
+
+}
