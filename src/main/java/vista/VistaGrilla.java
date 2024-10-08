@@ -10,23 +10,23 @@ import modelo.Coordenada;
 public class VistaGrilla extends GridPane {
     private Grilla grilla;
 
-    private Integer TAM_CELDA_PX = 40;
+    private Integer tamanioBloque;
 
-    public VistaGrilla(Grilla grilla) {
+
+    public VistaGrilla(Grilla grilla, Integer tamanioBloque) {
+        this.tamanioBloque = tamanioBloque;
         this.grilla = grilla;
         inicializarBloques();
     }
 
     // Inicializa la vista visual de los bloques basados en el modelo.
-    // REVISAR
-    private void inicializarBloques() {
+    public void inicializarBloques() {
         Integer dimensionBloque = grilla.getDimensionBloque();
-
         for (int x = 0; x < grilla.getAncho(); x++) {
             for (int y = 0; y < grilla.getAlto(); y++) {
                 Coordenada coordenada = new Coordenada(x * dimensionBloque, y * dimensionBloque);
                 Bloque bloque = grilla.getBloque(coordenada);
-                Rectangle bloqueVisual = crearRectanguloParaBloque(bloque, dimensionBloque * TAM_CELDA_PX);
+                Rectangle bloqueVisual = crearRectanguloParaBloque(bloque, dimensionBloque * tamanioBloque);
                 this.add(bloqueVisual, x , y );
             }
         }
@@ -64,12 +64,7 @@ public class VistaGrilla extends GridPane {
 
     // Método para mover un bloque visualmente.
     public void moverBloque(int x, int y, int nuevoX, int nuevoY) {
-        grilla.moverBloque(new Coordenada(x, y), new Coordenada(nuevoX, nuevoY));
+        grilla.moverBloque(new Coordenada(x / tamanioBloque, y / tamanioBloque), new Coordenada(nuevoX / tamanioBloque, nuevoY / tamanioBloque));
         actualizarVista();
     }
-
-    public Integer getTamanioDeCelda() {
-        return TAM_CELDA_PX * grilla.getDimensionBloque();
-    }
-
 }

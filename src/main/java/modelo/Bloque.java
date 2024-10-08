@@ -7,30 +7,6 @@ public abstract class Bloque { // Considerar implementar una interfaz para los b
         this.dimension = dimension;
     }
 
-    public boolean esMovible() {
-        return false;
-    }
-
-    public boolean esVacio() {
-        return false;
-    }
-
-    public boolean esOpaco() {
-        return false;
-    }
-
-    public boolean esEspejo() {
-        return false;
-    }
-
-    public boolean esVidrio() {
-        return false;
-    }
-
-    public boolean esCristal() {
-        return false;
-    }
-
     // Mét.odo abstracto que cada subclase debe implementar.
     public abstract void interactuarConLaser(Laser laser);
 

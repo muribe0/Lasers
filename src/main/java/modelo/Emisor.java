@@ -1,6 +1,5 @@
 package modelo;
 
-import javafx.scene.shape.Line;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -91,18 +90,6 @@ public class Emisor {
 
     public Laser getPunta() {
         return this.lasers.getLast();
-    }
-
-    /**
-     * Agrega un laser a la lista de lasers, efectivamente en la punta del ultimo laser. Utiliza la posicion de la punta del anterior laser como origen
-     *
-     * @param direccion: define la direccion del laser a agregar.
-     */
-    public void agregarLaser(Direccion direccion) {
-        Laser ultimo = getPunta();
-        Coordenada destino = ultimo.getDestino();
-        Laser nuevo = new Laser(destino, direccion);
-        this.lasers.add(nuevo);
     }
 
     public void agregarLaser(Laser laser) {

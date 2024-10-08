@@ -6,12 +6,6 @@ public class BloqueCristal extends Bloque{
         super(dimension);
     }
 
-    @Override
-    public boolean esCristal() {
-        return true;
-    }
-
-
     /**
      * Refracta al laser segun el sentido de incidencia del mismo. Si el laser inside hacia un borde horizontal del bloque,
      * se refracta verticalmente. Es decir, el Laser avanza hacia abajo o arriba verticalmente.

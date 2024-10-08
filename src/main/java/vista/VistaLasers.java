@@ -3,7 +3,6 @@ package vista;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Line;
 import modelo.Emisor;
 import modelo.Nivel;
@@ -14,36 +13,44 @@ import java.util.List;
 public class VistaLasers extends StackPane {
     private List<Emisor> emisores; // Grilla para mostrar los bloques
 
-    private Integer TAM_CELDA_PX = 40;
+    private Integer tamanoBloque = 40;
 
 
-    public VistaLasers(Nivel nivel) {
+    public VistaLasers(Nivel nivel, Integer tamanoBloque) {
+        this.tamanoBloque = tamanoBloque;
         this.emisores = nivel.getEmisores();
         this.setAlignment(Pos.TOP_LEFT);
-//        inicializarEmisores();
-        var tramo1 = new Line(0, 40, 40, 80);
-        tramo1.setTranslateY(40);
-        this.getChildren().add(tramo1);
+        inicializarEmisores();
+
     }
 
-    private void inicializarEmisores() {
+    public void inicializarEmisores() {
         for (Emisor emisor : emisores) {
             Coordenada origen = emisor.getOrigen();
-            inicializarEmisor(origen, emisor);
+            inicializarEmisor(emisor);
         }
     }
 
-    private void inicializarEmisor(Coordenada origen, Emisor emisor) {
-        Coordenada desde = origen;
+    private void inicializarEmisor(Emisor emisor) {
+        this.getChildren().clear();
+        Coordenada desde;
+        Coordenada hasta;
         for (var tramo : emisor.getTramos()) {
-            Coordenada hasta = tramo.getDestino();
-            Line linea = new Line(desde.getX() * TAM_CELDA_PX, desde.getY() * TAM_CELDA_PX, hasta.getX() * TAM_CELDA_PX, hasta.getY() * TAM_CELDA_PX);
-            linea.setFill(Color.RED);
+            desde = tramo.getOrigen();
+            hasta = tramo.getDestino();
+            // Defino la linea
+            Line linea = new Line(desde.getX() * tamanoBloque, desde.getY() * tamanoBloque, hasta.getX() * tamanoBloque, hasta.getY() * tamanoBloque);
+            // Movemos la linea
+            Integer x = Math.min(desde.getX(), hasta.getX());
+            Integer y = Math.min(desde.getY(), hasta.getY());
+
+            linea.setTranslateX(x * tamanoBloque);
+            linea.setTranslateY(y * tamanoBloque);
+
+            linea.strokeWidthProperty().set(2);
             linea.setStroke(Color.RED);
-            Integer x = desde.getX() / 2;
-            Integer y = desde.getY() / 2;
+
             this.getChildren().add(linea);
-            desde = hasta;
         }
     }
 

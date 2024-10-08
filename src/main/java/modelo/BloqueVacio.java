@@ -6,11 +6,6 @@ public class BloqueVacio extends Bloque {
         super(dimension);
     }
 
-    @Override
-    public boolean esVacio() {
-        return true;
-    }
-
     public void interactuarConLaser(Laser laser) {
         laser.continuar();
     }

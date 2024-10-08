@@ -26,10 +26,6 @@ public class Objetivo {
         this.alcanzado = true;
     }
 
-    // Método para resetear el estado del objetivo a no alcanzado
-    public void resetear() {
-        this.alcanzado = false;
-    }
 
     @Override
     public String toString() {

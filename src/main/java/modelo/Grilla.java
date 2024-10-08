@@ -48,7 +48,7 @@ public class Grilla {
      */
     public void moverBloque(Coordenada origen, Coordenada destino) {
 
-        if (estaDentro(destino) && getBloque(destino) instanceof BloqueVacio && !(getBloque(origen) instanceof BloqueOpaco)) {
+        if (estaDentro(destino) && getBloque(destino) instanceof BloqueVacio && !(getBloque(origen) instanceof BloqueOpaco) && !(getBloque(origen) instanceof BloqueSinPiso)) {
             Bloque bloque = getBloque(origen);
             Bloque vacio = getBloque(destino);
             colocarBloque(vacio, origen,true);

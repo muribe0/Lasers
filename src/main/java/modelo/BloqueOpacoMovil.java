@@ -6,15 +6,6 @@ public class BloqueOpacoMovil extends Bloque {
         super(dimension);
     }
 
-    @Override
-    public boolean esMovible() {
-        return true;
-    }
-
-    @Override
-    public boolean esOpaco() {
-        return true;
-    }
 
     @Override
     public void interactuarConLaser(Laser laser) {

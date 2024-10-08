@@ -7,11 +7,6 @@ public class BloqueOpaco extends Bloque {
     }
 
     @Override
-    public boolean esOpaco() {
-        return true;
-    }
-
-    @Override
     public void interactuarConLaser(Laser laser) {
         laser.detener();
     }

@@ -8,6 +8,8 @@ public class Nivel {
     private final List<Emisor> emisores;
     private final List<Objetivo> objetivos;
 
+    private boolean estaCompletado;
+
 
     public Nivel(String archivoNivel) {
         Coordenada dimensiones = obtenerDimensiones(archivoNivel);
@@ -21,6 +23,7 @@ public class Nivel {
         for (var emisor : emisores) {
             emisor.emitir(grilla);
         }
+        this.estaCompletado = false;
     }
 
 
@@ -134,13 +137,17 @@ public class Nivel {
 
     }
 
-    public boolean validarSolucion() {
+    public void validarSolucion() {
         for (Objetivo objetivo : objetivos) {
             if (!objetivo.esAlcanzado()) {
-                return false;
+                estaCompletado = false;
             }
         }
-        return true;
+        estaCompletado = true;
+    }
+
+    public boolean estaCompletado() {
+        return this.estaCompletado;
     }
 
     private void verificarSiObjetivoAlcanzado(Emisor emisor, Objetivo objetivo) {
@@ -161,6 +168,12 @@ public class Nivel {
             for (Emisor emisor : emisores) {
                 verificarSiObjetivoAlcanzado(emisor, objetivo);
             }
+        }
+    }
+
+    public void reiniciarEmisores() {
+        for (var emisor : this.emisores) {
+            emisor.emitir(this.grilla);
         }
     }
 

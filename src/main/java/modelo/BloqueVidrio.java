@@ -7,11 +7,6 @@ public class BloqueVidrio extends Bloque {
     }
 
     @Override
-    public boolean esVidrio() {
-        return true;
-    }
-
-    @Override
     public void interactuarConLaser(Laser laser) {
         var bifurcacion = new Laser(laser.getDestino(), laser.getDireccion());
         if (this.estaEnBordeHorizontal(bifurcacion.getDestino())) {
