@@ -7,6 +7,10 @@ public class Laser {
     private boolean detenido;
     private Laser bifurcado;
 
+    public Laser(Laser laser) {
+        this(laser.getOrigen(), laser.getDireccion());
+    }
+
     public Laser(Coordenada origen, Direccion direccion) {
         this.origen = new Coordenada(origen);
         this.direccion = new Direccion(direccion);
