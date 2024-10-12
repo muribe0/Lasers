@@ -43,17 +43,30 @@ public class Grilla {
 
     /**
      * Las Coordenadas deben estar en el formato del juego "real". Es decir, de bloques de 2x2.
-     * @param origen
-     * @param destino
+     * @param origen: coordenada de origen del Bloque. Este debe ser movible.
+     * @param destino: coordenada destino del Bloque. Esta debe ser vacia.
+     * @post el bloque se movio
+     * @return true si se puede(pudo) mover el bloque. false si no.
      */
-    public void moverBloque(Coordenada origen, Coordenada destino) {
+    public boolean moverBloque(Coordenada origen, Coordenada destino) {
 
-        if (estaDentro(destino) && getBloque(destino) instanceof BloqueVacio && !(getBloque(origen) instanceof BloqueOpaco) && !(getBloque(origen) instanceof BloqueSinPiso)) {
-            Bloque bloque = getBloque(origen);
-            Bloque vacio = getBloque(destino);
-            colocarBloque(vacio, origen,true);
-            colocarBloque(bloque,destino,true);
+        if (!estaDentro(destino)){
+            return false;
         }
+        if (!(getBloque(destino) instanceof BloqueVacio)) {
+            return false;
+        }
+        if (getBloque(origen) instanceof BloqueOpaco) {
+            return false;
+        }
+        if (getBloque(origen) instanceof BloqueSinPiso) {
+            return false;
+        }
+        Bloque bloque = getBloque(origen);
+        Bloque vacio = getBloque(destino);
+        colocarBloque(vacio, origen,true);
+        colocarBloque(bloque,destino,true);
+        return true;
     }
 
     /**
