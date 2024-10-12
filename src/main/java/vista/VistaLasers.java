@@ -5,7 +5,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import modelo.Emisor;
-import modelo.Nivel;
 import modelo.Coordenada;
 
 import java.util.List;
@@ -16,23 +15,22 @@ public class VistaLasers extends StackPane {
     private Integer tamanoBloque = 40;
 
 
-    public VistaLasers(Nivel nivel, Integer tamanoBloque) {
+    public VistaLasers(List<Emisor> emisores, Integer tamanoBloque) {
         this.tamanoBloque = tamanoBloque;
-        this.emisores = nivel.getEmisores();
+        this.emisores = emisores;
         this.setAlignment(Pos.TOP_LEFT);
         inicializarEmisores();
 
     }
 
     public void inicializarEmisores() {
+        this.getChildren().clear();
         for (Emisor emisor : emisores) {
-            Coordenada origen = emisor.getOrigen();
             inicializarEmisor(emisor);
         }
     }
 
     private void inicializarEmisor(Emisor emisor) {
-        this.getChildren().clear();
         Coordenada desde;
         Coordenada hasta;
         for (var tramo : emisor.getTramos()) {
