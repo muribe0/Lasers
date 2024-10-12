@@ -37,8 +37,9 @@ public class Emisor {
      *
      * @param grilla es la grilla completa
      */
-    public void emitir(Grilla grilla) {
-        Laser ultimo = this.lasers.getFirst();
+    public void emitir(Grilla grilla) throws NullPointerException {
+        validarEmisorVacio();
+        Laser ultimo = new Laser(this.lasers.getFirst());
         this.resetear();
         // mientras el ultimo laser no llegue al borde de la grilla o a un bloque opaco
         emitirDesde(ultimo, grilla);
@@ -87,16 +88,30 @@ public class Emisor {
         return true;
     }
 
-
-    public Laser getPunta() {
+    /**
+     * Obtiene el ultimo laser, si es que existe.
+     * @return
+     */
+    public Laser getPunta() throws NullPointerException {
+        validarEmisorVacio();
         return this.lasers.getLast();
     }
 
+    /**
+     * Agrega un tramo de Laser al final de la lista de Lasers
+     * @param laser final
+     */
     public void agregarLaser(Laser laser) {
         this.lasers.add(laser);
     }
 
-    public boolean pasaPor(Coordenada coordenada) {
+    /**
+     * Verifica si el emisor pasa por una coordenada dada. Por ejemplo, un objetivo
+     * @param coordenada de un lugar en la grilla
+     * @return true si pasa por la coordenada dada.
+     * @throws NullPointerException si el emisor esta vacio.
+     */
+    public boolean pasaPor(Coordenada coordenada) throws NullPointerException {
         for (Laser laser : this.lasers) {
             if (laser.pasaPor(coordenada)) {
                 return true;
@@ -105,11 +120,22 @@ public class Emisor {
         return false;
     }
 
+    /**
+     *
+     * @return Lista de tramos de Laser de este Emisor
+     */
     public List<Laser> getTramos() {
+        validarEmisorVacio();
         return this.lasers;
     }
 
-    public Coordenada getOrigen() {
+    /**
+     * Obtiene la coordenada de origen del Emisor.
+     * @return Coordenada de origen.
+     * @throws NullPointerException si el emisor esta vacio
+     */
+    public Coordenada getOrigen() throws NullPointerException {
+        validarEmisorVacio();
         return this.lasers.getFirst().getOrigen();
     }
 
@@ -126,5 +152,15 @@ public class Emisor {
             laser_completo += laser.toString();
         }
         return laser_completo;
+    }
+
+    /**
+     * Valida que el emisor no este vacio.
+     * @throws NullPointerException
+     */
+    private void validarEmisorVacio() throws NullPointerException {
+        if (this.lasers.isEmpty()) {
+            throw new NullPointerException("El emisor esta vacio");
+        }
     }
 }
