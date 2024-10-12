@@ -2,9 +2,11 @@ package modelo;
 
 public abstract class Bloque { // Considerar implementar una interfaz para los bloques.
     private Integer dimension;
+    private boolean admiteBloque;
 
     public Bloque(Integer dimension) {
         this.dimension = dimension;
+        this.admiteBloque = true;
     }
 
     /**
@@ -33,6 +35,21 @@ public abstract class Bloque { // Considerar implementar una interfaz para los b
      */
     public boolean estaEnBordeHorizontal(Coordenada coordenada) {
         return coordenada.getY() % dimension == 0;
+    }
+
+    /**
+     * Establece que el Bloque no admite otro Bloque encima
+     * @post: el bloque no admite otro bloque encima
+     */
+    public void setNoAdmiteBloque() {
+        admiteBloque = false;
+    }
+
+    /**
+     * @return: True si el bloque admite otro bloque encima.
+     */
+    public boolean admiteBloque() {
+        return admiteBloque;
     }
 
     @Override
