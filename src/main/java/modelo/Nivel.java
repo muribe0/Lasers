@@ -20,9 +20,7 @@ public class Nivel {
         this.emisores = new ArrayList<Emisor>();
         this.objetivos = new ArrayList<Objetivo>();
         cargarDesdeArchivo(archivoNivel);
-        for (var emisor : emisores) {
-            emisor.emitir(grilla);
-        }
+        reiniciarEmisores();
         this.estaCompletado = false;
     }
 
@@ -51,6 +49,29 @@ public class Nivel {
         return null;
     }
 
+    /**
+     * Carga desde una ruta de archivo el nivel completo: sus emisores, bloques y objetivos.
+     * El formato del archivo debe estar organizado en dos secciones separadas por una linea en blanco entre si.
+     *
+     * Primera sección: configuración de bloques.
+     * (espacio) celda sin piso
+     * . celda con piso vacía
+     * F bloque opaco fijo
+     * B bloque opaco móvil
+     * R bloque espejo
+     * G bloque vidrio
+     * C bloque cristal
+     *
+     * Segunda sección: configuración de emisores y objetivos
+     * E <columna> <fila> <direccion> emisor laser, donde direccion puede ser:
+     * SE sur-este
+     * SW sur-oeste
+     * NE nor-este
+     * NW nor-oeste
+     * G <columna> <fila> objetivo
+
+     * @param archivoNivel: ruta del archivo
+     */
     public void cargarDesdeArchivo(String archivoNivel) {
         // El archivo está separado en 2 secciones, y las secciones están separadas por una línea en blanco.
         try (BufferedReader br = new BufferedReader(new FileReader(archivoNivel))) {
@@ -77,6 +98,12 @@ public class Nivel {
         }
     }
 
+    /**
+     * Procesa una linea del archivo correspondiente a los bloques y coloca el bloque en la grilla.
+     * @param linea: linea del archivo con la informacion del bloque (tipo y coordenadas)
+     * @param fila: fila donde se va a colocar en la grilla, asumiendola como una matriz.
+     * @post: el bloque fue colocado con su tipo especifico.
+     */
     private void procesarLineaDeBloques(String linea, int fila) {
         for (int columna = 0; columna < linea.length(); columna++) {
             char simbolo = linea.charAt(columna);
@@ -130,17 +157,32 @@ public class Nivel {
         }
     }
 
+    /**
+     * Mueve el Bloque seleccionado por las coordenadas a su nueva posicion si es posible. Si lo logra,
+     * reinicia los emisores pues la grilla puede haber cambiado y el camino de cada emisor verse afectado.
+     * Las coordenadas deben tener en cuenta las dimensiones de cada Bloque
+     * @param x: coordenada horizontal del bloque a mover
+     * @param y: coordenada vertical del bloque a mover
+     * @param nuevoX: nueva coordenada horizontal
+     * @param nuevoY: nueva coordenada vertical
+     * @post: si tiene exito, se mueve el bloque y reinician los emisores.
+     */
     public void moverBloque(Integer x, Integer y, Integer nuevoX, Integer nuevoY) {
         Coordenada origen = new Coordenada(x, y);
-        Coordenada destino = new Coordenada(nuevoX, nuevoY);
-        grilla.moverBloque(origen, destino);
-
+        Coordenada destino = new Coordenada(nuevoX, nuevoY); // TODO: EVITAR que se pueda poner bloques en origen de emisores.
+        if (grilla.moverBloque(origen, destino)) {
+            reiniciarEmisores();
+        }
     }
 
     public void validarSolucion() {
         for (Objetivo objetivo : objetivos) {
+            for (var emisor : emisores) {
+                verificarSiObjetivoAlcanzado(emisor, objetivo);
+            }
             if (!objetivo.esAlcanzado()) {
                 estaCompletado = false;
+                return;
             }
         }
         estaCompletado = true;
@@ -171,6 +213,10 @@ public class Nivel {
         }
     }
 
+    /**
+     * Reinicia los emisores, emitiendolos nuevamente uno por uno.
+     * @post: emisores son emitidos nuevamente desde su origen inicial y con su direccion inicial.
+     */
     public void reiniciarEmisores() {
         for (var emisor : this.emisores) {
             emisor.emitir(this.grilla);
