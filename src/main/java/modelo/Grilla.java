@@ -50,22 +50,32 @@ public class Grilla {
      */
     public boolean moverBloque(Coordenada origen, Coordenada destino) {
 
+        if (!esMovible(origen)) {
+            return false;
+        }
         if (!estaDentro(destino)){
             return false;
         }
         if (!(getBloque(destino) instanceof BloqueVacio)) {
             return false;
         }
-        if (getBloque(origen) instanceof BloqueOpaco) {
-            return false;
-        }
-        if (getBloque(origen) instanceof BloqueSinPiso) {
+        if (!(getBloque(destino).admiteBloque())) {
             return false;
         }
         Bloque bloque = getBloque(origen);
         Bloque vacio = getBloque(destino);
         colocarBloque(vacio, origen,true);
         colocarBloque(bloque,destino,true);
+        return true;
+    }
+
+    public boolean esMovible(Coordenada coordenada) {
+        if (getBloque(coordenada) instanceof BloqueOpaco) {
+            return false;
+        }
+        if (getBloque(coordenada) instanceof BloqueSinPiso) {
+            return false;
+        }
         return true;
     }
 
