@@ -2,7 +2,7 @@ package vista;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import modelo.Coordenada;
@@ -13,7 +13,7 @@ public class VistaNivel extends StackPane {
     private Nivel nivel;
     private Integer alto;
     private Integer ancho;
-    private Scene scene;
+
 
     private VistaGrilla panelGrilla;
     private VistaLasers panelLaser;
@@ -48,9 +48,9 @@ public class VistaNivel extends StackPane {
 
         // Evento cuando se hace clic sobre un bloque o celda de la grilla
         this.setOnMouseClicked(event -> {
-//            if (nivel.estaCompletado()) {
-//                return;
-//            }
+            if (nivel.estaCompletado()) {
+                return;
+            }
             if (!bloqueSeleccionado) {
                 // Primer clic: Seleccionar el bloque
                 origenX = (int) event.getX();
@@ -62,14 +62,14 @@ public class VistaNivel extends StackPane {
                 int destinoY = (int) event.getY();
 
                 // Llamar a la lógica del juego para mover el bloque
-                panelGrilla.moverBloque(origenX, origenY, destinoX, destinoY);
-                nivel.reiniciarEmisores();
+                nivel.moverBloque(origenX / tamanioBloque, origenY / tamanioBloque, destinoX / tamanioBloque, destinoY / tamanioBloque);
+                panelGrilla.actualizarVista();
                 panelLaser.inicializarEmisores();
 
                 // Reiniciar el estado de selección
                 bloqueSeleccionado = false;
 
-//                nivel.validarSolucion();
+                nivel.validarSolucion();
             }
         });
     }
