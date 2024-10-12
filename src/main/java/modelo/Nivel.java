@@ -167,19 +167,33 @@ public class Nivel {
      * @param nuevoY: nueva coordenada vertical
      * @post: si tiene exito, se mueve el bloque y reinician los emisores.
      */
-    public void moverBloque(Integer x, Integer y, Integer nuevoX, Integer nuevoY) {
+    public boolean moverBloque(Integer x, Integer y, Integer nuevoX, Integer nuevoY) {
         Coordenada origen = new Coordenada(x, y);
         Coordenada destino = new Coordenada(nuevoX, nuevoY); // TODO: EVITAR que se pueda poner bloques en origen de emisores.
         if (grilla.moverBloque(origen, destino)) {
             reiniciarEmisores();
+            return true;
         }
+        return false;
     }
 
+    /**
+     * Verifica si el bloque en la posicion real dada es movible.
+     * @param x: coordenada del bloque de la dimension de la grilla
+     * @param y: coordenada del bloque de la dimension de la grilla
+     * @return true si el bloque es posible mover el bloque
+     */
+    public boolean bloqueEsMovible(Integer x, Integer y) {
+        Coordenada ubicacion = new Coordenada(x, y);
+        return grilla.esMovible(ubicacion);
+    }
+
+    /**
+     * Valida si todos los objetivos han sido alcanzados y establece el estado del nivel de acuerdo a ello.
+     * Si todos han sido alcanzados, el nivel estaCompletado.
+     */
     public void validarSolucion() {
         for (Objetivo objetivo : objetivos) {
-            for (var emisor : emisores) {
-                verificarSiObjetivoAlcanzado(emisor, objetivo);
-            }
             if (!objetivo.esAlcanzado()) {
                 estaCompletado = false;
                 return;
@@ -192,9 +206,14 @@ public class Nivel {
         return this.estaCompletado;
     }
 
-    private void verificarSiObjetivoAlcanzado(Emisor emisor, Objetivo objetivo) {
+    /**
+     * Marca un objetivo como alcanzado si es que el emisor dado pasa por dicho objetivo
+     * @param emisor: conjunto de tramos de laser que pueden pasar por el objetivo
+     * @param objetivo
+     */
+    private void marcarObjetivo(Emisor emisor, Objetivo objetivo) {
         if (emisor.pasaPor(objetivo.getPosicion())) {
-            objetivo.marcarComoAlcanzado();
+            objetivo.setAlcanzado(true);
         }
     }
 
@@ -205,10 +224,12 @@ public class Nivel {
      * @post: los objetivos han sido actualizados. Si algun emisor atraviesa un objetivo, este se marca como alcanzado.
      */
     public void actualizarObjetivos() {
+
         for (Objetivo objetivo : objetivos) {
+            objetivo.setAlcanzado(false);
             // Si la posición del objetivo ha sido alcanzada por un láser, marcar como alcanzado.
             for (Emisor emisor : emisores) {
-                verificarSiObjetivoAlcanzado(emisor, objetivo);
+                marcarObjetivo(emisor, objetivo);
             }
         }
     }
