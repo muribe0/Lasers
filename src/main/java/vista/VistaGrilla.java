@@ -61,10 +61,4 @@ public class VistaGrilla extends GridPane {
         this.getChildren().clear();
         inicializarBloques();
     }
-
-    // Método para mover un bloque visualmente.
-    public void moverBloque(int x, int y, int nuevoX, int nuevoY) {
-        grilla.moverBloque(new Coordenada(x / tamanioBloque, y / tamanioBloque), new Coordenada(nuevoX / tamanioBloque, nuevoY / tamanioBloque));
-        actualizarVista();
-    }
 }

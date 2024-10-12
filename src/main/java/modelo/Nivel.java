@@ -79,7 +79,7 @@ public class Nivel {
             int fila = 0;
             boolean leyendoBloques = true;
             while ((linea = br.readLine()) != null) {
-                linea = linea.stripTrailing(); // todo esto puede tirar problemas para grillas con bloques sin piso
+                linea = linea.stripTrailing(); // todo esto va a tirar problemas para grillas con bloques sin piso
                 if (linea.isEmpty()) {
                     leyendoBloques = false; // Pasamos a la segunda sección
                     continue;
@@ -131,7 +131,7 @@ public class Nivel {
             case '.' -> new BloqueVacio(dimensionBloque); // Espacio vacío con piso
             case ' ' -> new BloqueSinPiso(dimensionBloque); // Celda sin piso
             default -> null;
-        }; // TODO arreglar esto
+        };
         grilla.colocarBloque(bloque, ubicacion, true);
     }
 
