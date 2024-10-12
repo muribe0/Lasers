@@ -69,6 +69,8 @@ public class TestGeneracion {
     public void testCreacionNivelVacio() {
         String archivoNivel = "src/main/resources/level0.dat";
         var nivel = new Nivel(archivoNivel);
+        var emisor = nivel.getEmisores().getFirst();
+        var objetivo = nivel.getObjetivos().getFirst();
         // ....
         // .F..
         // .R.R
@@ -76,8 +78,8 @@ public class TestGeneracion {
         // TODO: falta testear aca el emisor y objetivo
         assert nivel.getEmisores().size() == 1;
         assert nivel.getObjetivos().size() == 1;
-        assert Objects.equals(nivel.getObjetivos().getFirst().toString(), "(8, 9) No alcanzado");
-        assert Objects.equals(nivel.getEmisores().getFirst().toString(), "(0, 1) -> (0, 1)");
+        assert Objects.equals(objetivo.toString(), "(8, 9) No alcanzado");
+        assert Objects.equals(emisor.toString(), "(0, 1) -> (1, 2)(1, 2) -> (2, 3)");
     }
 
     @Test
@@ -165,26 +167,23 @@ public class TestGeneracion {
         String archivoNivel = "src/main/resources/level1.dat";
         var nivel = new Nivel(archivoNivel);
         var emisor = nivel.getEmisores().getFirst();
-        var laser = emisor.getPunta();
+        var ultimoLaser = emisor.getPunta();
         var objetivo = nivel.getObjetivos().getFirst();
 
         // Carga de nivel correcta
         assert Objects.equals(nivel.getGrilla().toString(), " .R.\n....\n.R.R\n..F.\n....\n.R..\n");
-        assert Objects.equals(laser.getDireccion(), new Direccion(1, 1));
-        assert Objects.equals(laser.getDestino(), new Coordenada(0, 1));
+        assert Objects.equals(ultimoLaser.getDireccion(), new Direccion(1, -1));
+        assert Objects.equals(ultimoLaser.getDestino(), new Coordenada(8, 3));
         assert Objects.equals(objetivo.toString(), "(8, 9) No alcanzado");
 
         // Emisor emite correctamente desde el inicio
-        emisor.emitir(nivel.getGrilla());
         assert Objects.equals(emisor.toString(),
                 "(0, 1) -> (1, 2)(1, 2) -> (2, 3)(2, 3) -> (3, 4)(3, 4) -> (4, 3)(4, 3) -> (5, 2)(5, 2) -> (6, 3)(6, 3) -> (7, 4)(7, 4) -> (8, 3)");
 
         // mover un bloque espejo
         nivel.moverBloque(6, 4, 6, 2);
         assert Objects.equals(nivel.getGrilla().toString(), " .R.\n...R\n.R..\n..F.\n....\n.R..\n");
-
-        // TODO: Hay que hacer que esto ocurra automaticamente luego de mover algun bloque
-        emisor.emitir(nivel.getGrilla());
+        // El nivel automaticamente actualiza los emisores
         assert Objects.equals(emisor.toString(),
                 "(0, 1) -> (1, 2)(1, 2) -> (2, 3)(2, 3) -> (3, 4)(3, 4) -> (4, 3)(4, 3) -> (5, 2)(5, 2) -> (6, 3)(6, 3) -> (5, 4)(5, 4) -> (4, 5)(4, 5) -> (5, 6)");
     }
@@ -194,23 +193,21 @@ public class TestGeneracion {
         String archivoNivel = "src/main/resources/levelTestObjetivo.dat";
         var nivel = new Nivel(archivoNivel);
         var emisor = nivel.getEmisores().getFirst();
-        var laser = emisor.getPunta();
+        var ultimoLaser = emisor.getPunta();
         var objetivo = nivel.getObjetivos().getFirst();
 
         // Carga de nivel correcta
         assert Objects.equals(nivel.getGrilla().toString(), " ...\n....\n..RR\nR.F.\n....\n..R.\n");
-        assert Objects.equals(laser.getDireccion(), new Direccion(1, 1));
-        assert Objects.equals(laser.getDestino(), new Coordenada(0, 1));
+        assert Objects.equals(ultimoLaser.getDireccion(), new Direccion(1, -1));
+        assert Objects.equals(ultimoLaser.getDestino(), new Coordenada(8, 7));
         assert Objects.equals(objetivo.toString(), "(8, 9) No alcanzado");
 
         // Emisor emite correctamente desde el inicio
-        emisor.emitir(nivel.getGrilla());
         assert Objects.equals(emisor.toString(),
                 "(0, 1) -> (1, 2)(1, 2) -> (2, 3)(2, 3) -> (3, 4)(3, 4) -> (4, 5)(4, 5) -> (3, 6)(3, 6) -> (2, 7)(2, 7) -> (3, 8)(3, 8) -> (4, 9)(4, 9) -> (5, 10)(5, 10) -> (6, 9)(6, 9) -> (7, 8)(7, 8) -> (8, 7)");
 
         nivel.moverBloque(6, 4, 6, 6);
         assert Objects.equals(nivel.getGrilla().toString(), " ...\n....\n..R.\nR.FR\n....\n..R.\n");
-        emisor.emitir(nivel.getGrilla());
         assert Objects.equals(emisor.toString(),
                 "(0, 1) -> (1, 2)(1, 2) -> (2, 3)(2, 3) -> (3, 4)(3, 4) -> (4, 5)(4, 5) -> (3, 6)(3, 6) -> (2, 7)(2, 7) -> (3, 8)(3, 8) -> (4, 9)(4, 9) -> (5, 10)(5, 10) -> (6, 9)(6, 9) -> (7, 8)(7, 8) -> (8, 9)");
         assert !objetivo.esAlcanzado();
