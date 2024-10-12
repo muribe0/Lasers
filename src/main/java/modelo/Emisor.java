@@ -39,10 +39,11 @@ public class Emisor {
      */
     public void emitir(Grilla grilla) throws NullPointerException {
         validarEmisorVacio();
-        Laser ultimo = new Laser(this.lasers.getFirst());
+        Laser primerLaser = new Laser(this.lasers.getFirst());
         this.resetear();
+        establecerBloqueContenedorDelEmisor(primerLaser, grilla);
         // mientras el ultimo laser no llegue al borde de la grilla o a un bloque opaco
-        emitirDesde(ultimo, grilla);
+        emitirDesde(primerLaser, grilla);
     }
 
     /**
@@ -152,6 +153,20 @@ public class Emisor {
             laser_completo += laser.toString();
         }
         return laser_completo;
+    }
+
+    private void establecerBloqueContenedorDelEmisor(Laser laser, Grilla grilla) {
+        var origen = new Coordenada(laser.getOrigen());
+        if (grilla.estaEnBordeHorizontal(origen)) {
+            origen.sumarVerticalmente(laser.getDireccion());
+        } else if (grilla.estaEnBordeVertical(origen)) {
+            origen.sumarHorizontalmente(laser.getDireccion());
+        }
+        if (! grilla.estaDentro(origen)) {
+            return;
+        }
+        var bloqueContenedor = grilla.getBloque(origen);
+        bloqueContenedor.setNoAdmiteBloque(); // esto es valido hacerlo en cualquier momento ya que el juego nunca cambia el bloque por el cual el emisor sale
     }
 
     /**
