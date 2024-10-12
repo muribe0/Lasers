@@ -134,6 +134,10 @@ public class Laser {
         return this.origen.equals(coordenada) || this.destino.equals(coordenada);
     }
 
+    /**
+     * Retorna una representacion en texto del Laser.
+     * @return
+     */
     public String toString() {
         return this.origen.toString() + " -> " + this.destino.toString();
     }
@@ -152,6 +156,9 @@ public class Laser {
         return this.direccion;
     }
 
+    /**
+     * @return la coordenada de origen del Laser.
+     */
     public Coordenada getOrigen() {
         return this.origen;
     }
