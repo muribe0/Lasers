@@ -22,8 +22,8 @@ public class Objetivo {
     }
 
     // Marca el objetivo como alcanzado
-    public void marcarComoAlcanzado() {
-        this.alcanzado = true;
+    public void setAlcanzado(boolean fueAlcanzado) {
+        this.alcanzado = fueAlcanzado;
     }
 
 
