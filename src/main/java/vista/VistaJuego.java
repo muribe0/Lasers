@@ -31,7 +31,11 @@ public class VistaJuego {
         stage.show();
     }
 
-    // Método para poblar los botones con sus eventos
+    /**
+     * Establece el layout de botones para selecciona los distintos, agregando un listener para cada uno de ellos.
+     * El listener actua al presionar el boton y muestra el nivel seleccionado desde cero.
+     * @param rutaNiveles: arreglo de rutas de archivos de niveles. El juego usa estas rutas para cargar cada nivel.
+     */
     public void poblarBotones(String[] rutaNiveles) {
         for (int i = 0; i < rutaNiveles.length; i++) {
             String ruta = rutaNiveles[i];
