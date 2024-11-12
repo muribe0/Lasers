@@ -1,7 +1,12 @@
 # Framework used: JavaFX, following View-Controller-Model and Object Oriented Programming principles and best practices.
 
+## Purpose
+
+This project has the sole purpose of applying and following best practices/principles from Object Oriented Programming paradigm and uses JavaFX framework to pair a `view` with the `model`. The pattern used is with JavaFX is MVC (model view controller).
+
+**The view was not a priority for this project** although it intends to be playable.
+
 ## Usage
-The game shows good practices by following principles from OOP and uses JavaFX framework to pair a `view` with the `model`. The pattern used is MVC (model view controller) and will be improved on.  
 
 The application can be run with JavaFX as shown in the video. It is not terminal-ready as it was a small assignment.
 
