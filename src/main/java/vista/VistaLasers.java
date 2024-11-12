@@ -1,73 +1,57 @@
-//package vista;
-//
-//import javafx.application.Application;
-//import javafx.scene.Scene;
-//import javafx.scene.control.Button;
-//import javafx.scene.layout.GridPane;
-//import javafx.scene.layout.VBox;
-//import javafx.stage.Stage;
-//import modelo.Nivel;
-//import modelo.Coordenada;
-//
-//public class VistaLasers extends Application {
-//    private Nivel nivel; // Instancia del nivel
-//    private GridPane grillaVisual; // Grilla para mostrar los bloques
-//
-//    public VistaLasers(Nivel nivel) {
-//        this.nivel = nivel;
-//    }
-//
-//    @Override
-//    public void start(Stage primaryStage) {
-//        primaryStage.setTitle("Lasers Game");
-//
-//        grillaVisual = new GridPane();
-//        cargarGrilla();
-//
-//        VBox root = new VBox();
-//        root.getChildren().add(grillaVisual);
-//
-//        Scene scene = new Scene(root, 800, 600);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
-//
-//    private void cargarGrilla() {
-//        int filas = nivel.getGrilla().getFilas();
-//        int columnas = nivel.getGrilla().getColumnas();
-//
-//        for (int fila = 0; fila < filas; fila++) {
-//            for (int columna = 0; columna < columnas; columna++) {
-//                Coordenada posicion = new Coordenada(columna, fila);
-//                var bloque = nivel.getGrilla().getBloque(posicion); // Obtener bloque de la grilla
-//                Button botonBloque = crearBotonBloque(bloque, posicion);
-//                grillaVisual.add(botonBloque, columna, fila);
-//            }
-//        }
-//    }
-//
-//    private Button crearBotonBloque(var bloque, Coordenada posicion) {
-//        Button boton = new Button(bloque.toString()); // hay q cambiar por el símbolo del bloque
-//        boton.setPrefSize(50, 50);
-//
-//        // Event handler para mover bloques
-//        boton.setOnAction(e -> {
-//            // Lógica para mover el bloque si es un bloque móvil
-//            if (bloque instanceof esMovible) {
-//                moverBloque(posicion.getX(), posicion.getY(), posicion.getX() + 1, posicion.getY());
-//            }
-//        });
-//        return boton;
-//    }
-//
-//    private void moverBloque(Integer x, Integer y, Integer nuevoX, Integer nuevoY) {
-//        nivel.moverBloque(x, y, nuevoX, nuevoY);
-//        // Luego actualizar la vista
-//        grillaVisual.getChildren().clear();
-//        cargarGrilla();
-//    }
-//
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
-//}
+package vista;
+
+import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import modelo.Emisor;
+import modelo.Coordenada;
+
+import java.util.List;
+
+public class VistaLasers extends StackPane {
+    private List<Emisor> emisores; // Grilla para mostrar los bloques
+
+    private Integer tamanoBloque = 40;
+
+
+    public VistaLasers(List<Emisor> emisores, Integer tamanoBloque) {
+        this.tamanoBloque = tamanoBloque;
+        this.emisores = emisores;
+        this.setAlignment(Pos.TOP_LEFT);
+        inicializarEmisores();
+
+    }
+
+    public void inicializarEmisores() {
+        this.getChildren().clear();
+        for (Emisor emisor : emisores) {
+            inicializarEmisor(emisor);
+        }
+    }
+
+    private void inicializarEmisor(Emisor emisor) {
+        Coordenada desde;
+        Coordenada hasta;
+        for (var tramo : emisor.getTramos()) {
+            desde = tramo.getOrigen();
+            hasta = tramo.getDestino();
+            // Defino la linea
+            Line linea = new Line(desde.getX() * tamanoBloque, desde.getY() * tamanoBloque, hasta.getX() * tamanoBloque, hasta.getY() * tamanoBloque);
+            // Movemos la linea
+            Integer x = Math.min(desde.getX(), hasta.getX());
+            Integer y = Math.min(desde.getY(), hasta.getY());
+
+            linea.setTranslateX(x * tamanoBloque);
+            linea.setTranslateY(y * tamanoBloque);
+
+            linea.strokeWidthProperty().set(2);
+            linea.setStroke(Color.RED);
+
+            this.getChildren().add(linea);
+        }
+    }
+
+
+
+}

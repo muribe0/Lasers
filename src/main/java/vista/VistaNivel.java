@@ -1,56 +1,88 @@
 package vista;
 
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import modelo.Nivel;
 
-public class VistaNivel {
+public class VistaNivel extends StackPane {
     private Nivel nivel;
-    private Integer alto;
-    private Integer ancho;
-    private Scene scene;
-    private VBox vbox;
-    private HBox buttons;
 
     private VistaGrilla panelGrilla;
+    private VistaLasers panelLaser;
+    private VistaObjetivos panelObjetivos;
 
-    public VistaNivel(Stage stage, Nivel nivel) {
+    private final Integer tamanioBloque;
+
+    boolean bloqueSeleccionado;
+    Integer origenX;
+    Integer origenY;
+
+
+    /**
+     * Crea una instancia de la Vista de un Nivel alineado en la esquina superior izquierda respecto a su contenedor.
+     * Inicializa un GridPanel y StackPane(s) para representar la grilla, los lasers y objetivos del nivel.
+     * Agrega un listener para mover bloques y actualizar el estado del juego luego de moverlos.
+     * @param nivel: Nivel de la vista
+     * @param tamanioBloque: Tamanio de cada bloque del Nivel en pixeles.
+     */
+    public VistaNivel(Nivel nivel, Integer tamanioBloque) {
+        this.setAlignment(Pos.TOP_LEFT);
+
         this.nivel = nivel;
-        this.alto = nivel.getGrilla().getAlto();
-        this.ancho = nivel.getGrilla().getAncho();
 
-        this.panelGrilla = new VistaGrilla(nivel.getGrilla());
+        this.bloqueSeleccionado = false;
+        this.tamanioBloque = tamanioBloque;
 
-        this.vbox = new VBox();
-        this.buttons = new HBox();
+        this.panelGrilla = new VistaGrilla(nivel.getGrilla(), tamanioBloque);
+        this.panelLaser = new VistaLasers(nivel.getEmisores(), tamanioBloque);
+        this.panelObjetivos = new VistaObjetivos(nivel.getObjetivos(), tamanioBloque);
+        panelLaser.setMouseTransparent(true);
+        panelObjetivos.setMouseTransparent(true);
 
-        vbox.getChildren().add(panelGrilla);
+        this.getChildren().addAll(panelGrilla, panelLaser, panelObjetivos);
+        // panelLaser esta encima
+        this.setOnMouseClicked(event -> new MoverBloque().handle(event));
 
-        String rutaNiveles[] = { "level0.dat", "level1.dat", "level2.dat" };
-        poblarBotones(rutaNiveles);
-
-        var tamanioBloque = panelGrilla.getTamanioDeCelda();
-
-        // Parte visual
-        var label = new Label("Hola mundo!");
-
-        scene = new Scene(vbox, ancho * tamanioBloque, alto * tamanioBloque + tamanioBloque);
-        stage.setScene(scene);
-        stage.show();
     }
 
-    private void poblarBotones(String rutaNiveles[]) {
-        for (var ruta : rutaNiveles) {
-            Button boton = new Button("src/main/resources/" + ruta);
-            buttons.getChildren().add(boton);
+    /**
+     * Listener que se encarga de mover el bloque y actualizar el nivel, estado de juego y vistas luego de moverlo.
+     *
+     */
+    public class MoverBloque implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent evento) {
+            if (nivel.estaCompletado()) {
+                return;
+            }
+            if (!bloqueSeleccionado) {
+                // Primer clic: Seleccionar el bloque
+                origenX = (int) evento.getX();
+                origenY = (int) evento.getY();
+                if (nivel.bloqueEsMovible(origenX / tamanioBloque, origenY / tamanioBloque)) {
+                    bloqueSeleccionado = true;
+                }
+            } else {
+                // Segundo clic: Mover el bloque seleccionado a la nueva posición
+                int destinoX = (int) evento.getX();
+                int destinoY = (int) evento.getY();
+
+                // Llamar a la lógica del juego para mover el bloque
+                nivel.moverBloque(origenX / tamanioBloque, origenY / tamanioBloque,
+                        destinoX / tamanioBloque, destinoY / tamanioBloque);
+                panelGrilla.actualizarVista();
+                panelLaser.inicializarEmisores();
+
+                // Reiniciar el estado de selección
+                bloqueSeleccionado = false;
+
+                nivel.actualizarObjetivos();
+                nivel.validarSolucion();
+            }
         }
 
-        vbox.getChildren().add(buttons);
     }
-
 }
+

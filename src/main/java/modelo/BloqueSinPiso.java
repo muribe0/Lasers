@@ -6,10 +6,6 @@ public class BloqueSinPiso extends Bloque {
         super(dimension);
     }
 
-    public boolean esPiso() {
-        return true;
-    }
-
     @Override
     public void interactuarConLaser(Laser laser) {
         laser.continuar();

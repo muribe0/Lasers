@@ -22,14 +22,10 @@ public class Objetivo {
     }
 
     // Marca el objetivo como alcanzado
-    public void marcarComoAlcanzado() {
-        this.alcanzado = true;
+    public void setAlcanzado(boolean fueAlcanzado) {
+        this.alcanzado = fueAlcanzado;
     }
 
-    // Método para resetear el estado del objetivo a no alcanzado
-    public void resetear() {
-        this.alcanzado = false;
-    }
 
     @Override
     public String toString() {

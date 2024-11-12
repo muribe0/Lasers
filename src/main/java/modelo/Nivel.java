@@ -8,6 +8,8 @@ public class Nivel {
     private final List<Emisor> emisores;
     private final List<Objetivo> objetivos;
 
+    private boolean estaCompletado;
+
 
     public Nivel(String archivoNivel) {
         Coordenada dimensiones = obtenerDimensiones(archivoNivel);
@@ -18,6 +20,8 @@ public class Nivel {
         this.emisores = new ArrayList<Emisor>();
         this.objetivos = new ArrayList<Objetivo>();
         cargarDesdeArchivo(archivoNivel);
+        reiniciarEmisores();
+        this.estaCompletado = false;
     }
 
 
@@ -45,6 +49,29 @@ public class Nivel {
         return null;
     }
 
+    /**
+     * Carga desde una ruta de archivo el nivel completo: sus emisores, bloques y objetivos.
+     * El formato del archivo debe estar organizado en dos secciones separadas por una linea en blanco entre si.
+     *
+     * Primera sección: configuración de bloques.
+     * (espacio) celda sin piso
+     * . celda con piso vacía
+     * F bloque opaco fijo
+     * B bloque opaco móvil
+     * R bloque espejo
+     * G bloque vidrio
+     * C bloque cristal
+     *
+     * Segunda sección: configuración de emisores y objetivos
+     * E <columna> <fila> <direccion> emisor laser, donde direccion puede ser:
+     * SE sur-este
+     * SW sur-oeste
+     * NE nor-este
+     * NW nor-oeste
+     * G <columna> <fila> objetivo
+
+     * @param archivoNivel: ruta del archivo
+     */
     public void cargarDesdeArchivo(String archivoNivel) {
         // El archivo está separado en 2 secciones, y las secciones están separadas por una línea en blanco.
         try (BufferedReader br = new BufferedReader(new FileReader(archivoNivel))) {
@@ -52,7 +79,7 @@ public class Nivel {
             int fila = 0;
             boolean leyendoBloques = true;
             while ((linea = br.readLine()) != null) {
-                linea = linea.stripTrailing(); // todo esto puede tirar problemas para grillas con bloques sin piso
+                linea = linea.stripTrailing(); // todo esto va a tirar problemas para grillas con bloques sin piso
                 if (linea.isEmpty()) {
                     leyendoBloques = false; // Pasamos a la segunda sección
                     continue;
@@ -71,6 +98,12 @@ public class Nivel {
         }
     }
 
+    /**
+     * Procesa una linea del archivo correspondiente a los bloques y coloca el bloque en la grilla.
+     * @param linea: linea del archivo con la informacion del bloque (tipo y coordenadas)
+     * @param fila: fila donde se va a colocar en la grilla, asumiendola como una matriz.
+     * @post: el bloque fue colocado con su tipo especifico.
+     */
     private void procesarLineaDeBloques(String linea, int fila) {
         for (int columna = 0; columna < linea.length(); columna++) {
             char simbolo = linea.charAt(columna);
@@ -98,7 +131,7 @@ public class Nivel {
             case '.' -> new BloqueVacio(dimensionBloque); // Espacio vacío con piso
             case ' ' -> new BloqueSinPiso(dimensionBloque); // Celda sin piso
             default -> null;
-        }; // TODO arreglar esto
+        };
         grilla.colocarBloque(bloque, ubicacion, true);
     }
 
@@ -124,25 +157,63 @@ public class Nivel {
         }
     }
 
-    public void moverBloque(Integer x, Integer y, Integer nuevoX, Integer nuevoY) {
+    /**
+     * Mueve el Bloque seleccionado por las coordenadas a su nueva posicion si es posible. Si lo logra,
+     * reinicia los emisores pues la grilla puede haber cambiado y el camino de cada emisor verse afectado.
+     * Las coordenadas deben tener en cuenta las dimensiones de cada Bloque
+     * @param x: coordenada horizontal del bloque a mover
+     * @param y: coordenada vertical del bloque a mover
+     * @param nuevoX: nueva coordenada horizontal
+     * @param nuevoY: nueva coordenada vertical
+     * @post: si tiene exito, se mueve el bloque y reinician los emisores.
+     */
+    public boolean moverBloque(Integer x, Integer y, Integer nuevoX, Integer nuevoY) {
         Coordenada origen = new Coordenada(x, y);
-        Coordenada destino = new Coordenada(nuevoX, nuevoY);
-        grilla.moverBloque(origen, destino);
-
+        Coordenada destino = new Coordenada(nuevoX, nuevoY); // TODO: EVITAR que se pueda poner bloques en origen de emisores.
+        if (grilla.moverBloque(origen, destino)) {
+            reiniciarEmisores();
+            return true;
+        }
+        return false;
     }
 
-    public boolean validarSolucion() {
+    /**
+     * Verifica si el bloque en la posicion real dada es movible.
+     * @param x: coordenada del bloque de la dimension de la grilla
+     * @param y: coordenada del bloque de la dimension de la grilla
+     * @return true si el bloque es posible mover el bloque
+     */
+    public boolean bloqueEsMovible(Integer x, Integer y) {
+        Coordenada ubicacion = new Coordenada(x, y);
+        return grilla.esMovible(ubicacion);
+    }
+
+    /**
+     * Valida si todos los objetivos han sido alcanzados y establece el estado del nivel de acuerdo a ello.
+     * Si todos han sido alcanzados, el nivel estaCompletado.
+     */
+    public void validarSolucion() {
         for (Objetivo objetivo : objetivos) {
             if (!objetivo.esAlcanzado()) {
-                return false;
+                estaCompletado = false;
+                return;
             }
         }
-        return true;
+        estaCompletado = true;
     }
 
-    private void verificarSiObjetivoAlcanzado(Emisor emisor, Objetivo objetivo) {
+    public boolean estaCompletado() {
+        return this.estaCompletado;
+    }
+
+    /**
+     * Marca un objetivo como alcanzado si es que el emisor dado pasa por dicho objetivo
+     * @param emisor: conjunto de tramos de laser que pueden pasar por el objetivo
+     * @param objetivo
+     */
+    private void marcarObjetivo(Emisor emisor, Objetivo objetivo) {
         if (emisor.pasaPor(objetivo.getPosicion())) {
-            objetivo.marcarComoAlcanzado();
+            objetivo.setAlcanzado(true);
         }
     }
 
@@ -153,11 +224,23 @@ public class Nivel {
      * @post: los objetivos han sido actualizados. Si algun emisor atraviesa un objetivo, este se marca como alcanzado.
      */
     public void actualizarObjetivos() {
+
         for (Objetivo objetivo : objetivos) {
+            objetivo.setAlcanzado(false);
             // Si la posición del objetivo ha sido alcanzada por un láser, marcar como alcanzado.
             for (Emisor emisor : emisores) {
-                verificarSiObjetivoAlcanzado(emisor, objetivo);
+                marcarObjetivo(emisor, objetivo);
             }
+        }
+    }
+
+    /**
+     * Reinicia los emisores, emitiendolos nuevamente uno por uno.
+     * @post: emisores son emitidos nuevamente desde su origen inicial y con su direccion inicial.
+     */
+    public void reiniciarEmisores() {
+        for (var emisor : this.emisores) {
+            emisor.emitir(this.grilla);
         }
     }
 

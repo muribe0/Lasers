@@ -7,6 +7,10 @@ public class Laser {
     private boolean detenido;
     private Laser bifurcado;
 
+    public Laser(Laser laser) {
+        this(laser.getOrigen(), laser.getDireccion());
+    }
+
     public Laser(Coordenada origen, Direccion direccion) {
         this.origen = new Coordenada(origen);
         this.direccion = new Direccion(direccion);
@@ -130,6 +134,10 @@ public class Laser {
         return this.origen.equals(coordenada) || this.destino.equals(coordenada);
     }
 
+    /**
+     * Retorna una representacion en texto del Laser.
+     * @return
+     */
     public String toString() {
         return this.origen.toString() + " -> " + this.destino.toString();
     }
@@ -146,5 +154,12 @@ public class Laser {
      */
     public Direccion getDireccion() {
         return this.direccion;
+    }
+
+    /**
+     * @return la coordenada de origen del Laser.
+     */
+    public Coordenada getOrigen() {
+        return this.origen;
     }
 }

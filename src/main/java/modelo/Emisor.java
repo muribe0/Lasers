@@ -1,5 +1,6 @@
 package modelo;
 
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,11 +37,13 @@ public class Emisor {
      *
      * @param grilla es la grilla completa
      */
-    public void emitir(Grilla grilla) {
-        Laser ultimo = this.lasers.getFirst();
+    public void emitir(Grilla grilla) throws NullPointerException {
+        validarEmisorVacio();
+        Laser primerLaser = new Laser(this.lasers.getFirst());
         this.resetear();
+        establecerBloqueContenedorDelEmisor(primerLaser, grilla);
         // mientras el ultimo laser no llegue al borde de la grilla o a un bloque opaco
-        emitirDesde(ultimo, grilla);
+        emitirDesde(primerLaser, grilla);
     }
 
     /**
@@ -86,34 +89,55 @@ public class Emisor {
         return true;
     }
 
-
-    public Laser getPunta() {
+    /**
+     * Obtiene el ultimo laser, si es que existe.
+     * @return
+     */
+    public Laser getPunta() throws NullPointerException {
+        validarEmisorVacio();
         return this.lasers.getLast();
     }
 
     /**
-     * Agrega un laser a la lista de lasers, efectivamente en la punta del ultimo laser. Utiliza la posicion de la punta del anterior laser como origen
-     *
-     * @param direccion: define la direccion del laser a agregar.
+     * Agrega un tramo de Laser al final de la lista de Lasers
+     * @param laser final
      */
-    public void agregarLaser(Direccion direccion) {
-        Laser ultimo = getPunta();
-        Coordenada destino = ultimo.getDestino();
-        Laser nuevo = new Laser(destino, direccion);
-        this.lasers.add(nuevo);
-    }
-
     public void agregarLaser(Laser laser) {
         this.lasers.add(laser);
     }
 
-    public boolean pasaPor(Coordenada coordenada) {
+    /**
+     * Verifica si el emisor pasa por una coordenada dada. Por ejemplo, un objetivo
+     * @param coordenada de un lugar en la grilla
+     * @return true si pasa por la coordenada dada.
+     * @throws NullPointerException si el emisor esta vacio.
+     */
+    public boolean pasaPor(Coordenada coordenada) throws NullPointerException {
         for (Laser laser : this.lasers) {
             if (laser.pasaPor(coordenada)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     *
+     * @return Lista de tramos de Laser de este Emisor
+     */
+    public List<Laser> getTramos() {
+        validarEmisorVacio();
+        return this.lasers;
+    }
+
+    /**
+     * Obtiene la coordenada de origen del Emisor.
+     * @return Coordenada de origen.
+     * @throws NullPointerException si el emisor esta vacio
+     */
+    public Coordenada getOrigen() throws NullPointerException {
+        validarEmisorVacio();
+        return this.lasers.getFirst().getOrigen();
     }
 
     /**
@@ -129,5 +153,29 @@ public class Emisor {
             laser_completo += laser.toString();
         }
         return laser_completo;
+    }
+
+    private void establecerBloqueContenedorDelEmisor(Laser laser, Grilla grilla) {
+        var origen = new Coordenada(laser.getOrigen());
+        if (grilla.estaEnBordeHorizontal(origen)) {
+            origen.sumarVerticalmente(laser.getDireccion());
+        } else if (grilla.estaEnBordeVertical(origen)) {
+            origen.sumarHorizontalmente(laser.getDireccion());
+        }
+        if (! grilla.estaDentro(origen)) {
+            return;
+        }
+        var bloqueContenedor = grilla.getBloque(origen);
+        bloqueContenedor.setNoAdmiteBloque(); // esto es valido hacerlo en cualquier momento ya que el juego nunca cambia el bloque por el cual el emisor sale
+    }
+
+    /**
+     * Valida que el emisor no este vacio.
+     * @throws NullPointerException
+     */
+    private void validarEmisorVacio() throws NullPointerException {
+        if (this.lasers.isEmpty()) {
+            throw new NullPointerException("El emisor esta vacio");
+        }
     }
 }
